@@ -1,0 +1,21 @@
+1  宏基因组-查找参考序列，错误原因：参数-o 后面应该是一个路径，而非一个文件
+报错内容：
+2021-10-18 10:17:25.738 | INFO     | G_COMM.runHongjiyin:do_find:90 - 命令如下：python /home/admin1/IPH-nano/G_CONFIG/Metagenome/find_ref_seqs.py -q /home/admin1/IPH_nano_Results/Unknown_pathogen/unknow/s19.fastq -o /home/admin1/IPH_nano_Results/Unknown_pathogen/unknow/s19_fa/s19_fa.fa -db /home/admin1/IPH-nano/Database/NT_Database/nucl_RVDB -num 10
+2021-10-18 10:17:26.210 | ERROR    | G_COMM.runHongjiyin:do_find:115 - s19_fa 执行失败！：Command line argument error: Argument "out". File is not accessible:  `/home/admin1/IPH_nano_Results/Unknown_pathogen/unknow/s19_fa/s19_fa.fa/s19.blastn'
+
+-o /home/admin1/IPH_nano_Results/Unknown_pathogen/unknow/s19_fa/s19_fa.fa
+此处/s19_fa.fa多余
+
+2  宏基因组-> 序列拼接
+第一栏，选择fasta文件改为选择fastq文件，该行的文件校验有问题，去掉该处的文件校验
+第三行，校验fasta文件的地方可能也有问题，当时是要求这一样校验是不是有且只有一个“>”,如果你不记得了这一行也不要校验了
+
+3  二代测序-> 序列拼接
+新增加的snp位置的勾选有问题，如果不勾选，会报错，-snp_cutoff 这个参数后面不接受“-”，你用其它字符代替一下。
+报错内容：
+2021-10-18 10:45:57.695 | INFO     | G_COMM.runErdaixlpj:run_python:121 - 命令如下：python /home/admin1/IPH-nano/G_CONFIG/erdai/assemble_seq.py -type PE -ref /home/admin1/ncov_ref.fa -sample_name 5137_S1 -threads 10 -depth 10 -quality 20 -snp_cutoff - -sec_file /media/admin1/hdd1/zx_ncov/sample/0.data/1.cutadapt -thi_file /media/admin1/hdd1/zx_ncov/sample/0.data/2.mapping
+2021-10-18 10:45:57.992 | ERROR    | G_COMM.runErdaixlpj:run_python:146 - 0.data 执行失败！：usage: assemble_seq.py [-h] [-type TYPE] [-ref REF] [-sample_name SAMPLE_NAME]
+                       [-threads THREADS] [-depth DEPTH] [-quality QUALITY]
+                       [-snp_cutoff SNP_CUTOFF] [-sec_file SEC_FILE]
+                       [-thi_file THI_FILE]
+assemble_seq.py: error: argument -snp_cutoff: invalid float value: '-'
