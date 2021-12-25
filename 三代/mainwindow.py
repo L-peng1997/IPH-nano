@@ -38,7 +38,7 @@ from G_UI.liugan import Ui_Dialog as Liugan_UI
 from G_UI.nuoru import Ui_Dialog as Nuoru_Ui
 from G_UI.weizhi_xvlietiqu import Ui_Dialog as Xvlietiqu_UI
 from G_UI.xinguan_xlpj import Ui_Dialog as Xinguan_Ui
-from G_UI.xinguan_xlcz import Ui_Dialog as Xvlie_UI
+from G_UI.xinguan_suyuan import Ui_Dialog as Xvlie_UI
 # 2021-12-05 19:47:47 添加界面
 from G_UI.weizhi_xlfl import Ui_Dialog as WZxlfl_UI
 from G_UI.erdai_ctpj import Ui_Dialog as EDctpj_UI
@@ -357,7 +357,7 @@ class Ui_MainWindow(QObject):
         self.typeTree.setSortingEnabled(False)
         self.typeTree.topLevelItem(0).setText(0, self._translate("MainWindow", "Nanopore新冠病毒"))
         self.typeTree.topLevelItem(0).child(0).setText(0, self._translate("MainWindow", "序列拼接"))
-        self.typeTree.topLevelItem(0).child(1).setText(0, self._translate("MainWindow", "相似序列查找"))
+        self.typeTree.topLevelItem(0).child(1).setText(0, self._translate("MainWindow", "溯源与分子进化树"))
         self.typeTree.topLevelItem(1).setText(0, self._translate("MainWindow", "Nanopore未知病原"))
         self.typeTree.topLevelItem(1).child(0).setText(0, self._translate("MainWindow", "序列分类"))
         self.typeTree.topLevelItem(1).child(1).setText(0, self._translate("MainWindow", "可视化分析"))
@@ -419,7 +419,7 @@ class Ui_MainWindow(QObject):
         child_ui = ''
         if current_tree in ['Nanopore流感病毒拼接']:
             child_ui = Liugan_UI()
-        elif current_tree == '相似序列查找':
+        elif current_tree == '溯源与分子进化树':
             child_ui = Xvlie_UI()
         elif current_tree == '序列提取':
             child_ui = Xvlietiqu_UI()
@@ -498,9 +498,8 @@ class Ui_MainWindow(QObject):
                     self.do_pyfile(self.params)
                 else:
                     self.do_hongjiyin(self.params)
-            elif self.typeTree.currentItem().text(0) == '相似序列查找':
-                file_name = config.get('SARS2_analyze', 'analyse_file')
-                self.do_snakemake(self.params, file_name, self.xg_analyse_file_list)
+            elif self.typeTree.currentItem().text(0) == '溯源与分子进化树':
+                self.do_pyfile(self.params)
             elif self.typeTree.currentItem().text(0) == '诺如病毒':
                 file_name = config.get('Norovirus', 'file_name')
                 self.do_snakemake(self.params, file_name, self.nuoru_file_list)
@@ -596,10 +595,6 @@ class Ui_MainWindow(QObject):
                     result = re.findall(r'0\.rawdata', dir_data)
                 elif self.typeTree.currentItem().text(0) in ['Nanopore未知病原', 'Nanopore流感病毒拼接', 'Nanopore宏基因组序列拼接']:
                     result = re.findall(r'barcode\d+', dir_data)
-                elif self.typeTree.currentItem().text(0) == '相似序列查找':
-                    start_file = config.get('SARS2_analyze', 'start_file').split(',')
-                    file_list = os.listdir(file_path + "/0.data")
-                    result = True if set(start_file).issubset(set(file_list)) else False
             except Exception as e:
                 QMessageBox.warning(self.centralwidget, '警告', f'运行失败：起始文件夹判断失败,{e}！！！', QMessageBox.Ok)
         if result:
@@ -1111,8 +1106,6 @@ class Ui_MainWindow(QObject):
                 result_file_list = []
                 if self.typeTree.currentItem().text(0) == '诺如病毒':
                     result_file_list = self.nuoru_file_list
-                elif self.typeTree.currentItem().text(0) == '相似序列查找':
-                    result_file_list = self.xg_analyse_file_list
                 for file in result_file_list:
                     if os.path.exists(path + '/' + file):
                         shutil.rmtree(path + '/' + file)
