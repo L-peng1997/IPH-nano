@@ -37,7 +37,7 @@ from G_UI.hongjiyin_xlpj import Ui_Dialog as Xlpj_UI
 from G_UI.liugan import Ui_Dialog as Liugan_UI
 from G_UI.nuoru import Ui_Dialog as Nuoru_Ui
 from G_UI.weizhi_xvlietiqu import Ui_Dialog as Xvlietiqu_UI
-from G_UI.xinguan_cexv import Ui_Dialog as Xinguan_Ui
+from G_UI.xinguan_xlpj import Ui_Dialog as Xinguan_Ui
 from G_UI.xinguan_xlcz import Ui_Dialog as Xvlie_UI
 # 2021-12-05 19:47:47 添加界面
 from G_UI.weizhi_xlfl import Ui_Dialog as WZxlfl_UI
@@ -430,7 +430,13 @@ class Ui_MainWindow(QObject):
             child_ui = Czckxl_UI()
         elif current_tree == '序列拼接':
             if self.typeTree.currentItem().parent().text(0) == 'Nanopore新冠病毒':
-                child_ui = Xinguan_Ui(current_tree)
+                try:
+                    con_model = config.get('Metagenome', 'model_list')
+                    model_list = con_model.split(',')
+                except:
+                    QMessageBox.warning(self.centralwidget, '警告', '配置文件中模型列表参数有误！', QMessageBox.Ok)
+                else:
+                    child_ui = Xinguan_Ui(model_list)
             else:
                 child_ui = Xlpj_UI()
         elif current_tree == '序列拼接(基于参考序列)':
@@ -489,11 +495,10 @@ class Ui_MainWindow(QObject):
         if signal == 1:
             # print(f'开始运行程序，参数为{data}')
             # 运行程序
-            if self.typeTree.currentItem().text(0) in ['Nanopore新冠病毒']:
-                self.do_xinguan(self.params)
-            elif self.typeTree.currentItem().text(0) == '序列拼接':
+            if self.typeTree.currentItem().text(0) == '序列拼接':
                 if self.typeTree.currentItem().parent().text(0) == 'Nanopore新冠病毒':
-                    self.do_xinguan(self.params)
+                    # 2021-12-25 04:28:36 修改新冠序列拼接运行python文件
+                    self.do_pyfile(self.params)
                 else:
                     self.do_hongjiyin(self.params)
             elif self.typeTree.currentItem().text(0) == '相似序列查找':
@@ -502,15 +507,13 @@ class Ui_MainWindow(QObject):
             elif self.typeTree.currentItem().text(0) == '诺如病毒':
                 file_name = config.get('Norovirus', 'file_name')
                 self.do_snakemake(self.params, file_name, self.nuoru_file_list)
-            elif self.typeTree.currentItem().text(0) == 'Nanopore未知病原':
-                self.do_weizhi(self.params)
             elif self.typeTree.currentItem().text(0) == '分子进化树':
                 self.do_jinhuashu(self.params)
             elif self.typeTree.currentItem().text(0) == '序列提取':
                 self.do_xvlietiqu(self.params)
             elif self.typeTree.currentItem().text(0) == 'Nanopore流感病毒拼接':
                 self.do_liugan(self.params)
-            elif self.typeTree.currentItem().text(0) in ['查找参考序列', 'Nanopore宏基因组序列拼接']:
+            elif self.typeTree.currentItem().text(0) in ['查找参考序列']:
                 self.do_hongjiyin(self.params)
             elif self.typeTree.currentItem().text(0) in ['数据质控', '二代测序']:
                 self.do_datacontrol(self.params)
@@ -566,48 +569,21 @@ class Ui_MainWindow(QObject):
         :param data: 执行程序所需要的参数
         :return:
         """
-        a = RunCommand(data)
-        work_file = data['work_file']
-        task_name = data['task_name']
-        flag = 0
-        s_sql = """select * from task where taskNm = ? and taskType=?"""
-        result = self.cursor.execute(s_sql, (task_name, data['task_type']))
-        task_data = result.fetchall()
-        if os.path.exists(work_file) and (task_name in os.listdir(work_file) or len(task_data) > 0):
-            reply = QMessageBox.warning(self.centralwidget, '警告', '当前任务已存在，是否删除？', QMessageBox.Yes | QMessageBox.No)
-            if reply == QMessageBox.Yes:
-                try:
-                    if os.path.exists(work_file + '/' + task_name):
-                        shutil.rmtree(work_file + '/' + task_name)
-                    d_sql = """delete from task where taskNm=? and taskType=?"""
-                    d_p_sql = """delete from params where taskNm=? and taskType=?"""
-                    self.cursor.execute(d_sql, (task_name, data['task_type']))
-                    self.conn.commit()
-                    self.cursor.execute(d_p_sql, (task_name, data['task_type']))
-                    self.conn.commit()
-                except Exception as e:
-                    logger.error(f'数据库删除失败：{str(e)}')
-                finally:
-                    flag = self.judge_start(data, a.fir_name)
-            elif reply == QMessageBox.No:
-                self.status = '停止运行'
-                QMessageBox.information(self.centralwidget, '提示', '程序已停止运行', QMessageBox.Ok)
-        elif os.path.exists(work_file) and task_name not in os.listdir(work_file):
-            flag = self.judge_start(data, a.fir_name)
-        else:
-            QMessageBox.warning(self.centralwidget, '警告', f'{work_file} 不存在', QMessageBox.Ok)
-        if flag:
-            a.exitSignal.connect(self.output)
-            logger.info(f'flag为{flag}')
-            # a.run()
-            # 单独开启线程执行任务，是为了防止在运行命令的时候主界面卡死
-            self.thread1 = threading.Thread(target=a.run, args=(flag,), name='main')
-            self.thread1.start()
-            i_sql = """insert into params(taskNm, taskType, sampleNm, barcode, filepath)values (?,?,?,?,?)"""
-            self.cursor.execute(i_sql,
-                                (data['task_name'], data['task_type'], ','.join(data['sample_list']), ','.join(data['barcode_list']),
-                                 data['work_file']))
-            self.conn.commit()
+        a = RunPythonFile(data)
+        d_sql = """delete from task where taskNm=? and taskType=?"""
+        d_p_sql = """delete from params where taskNm=? and taskType=?"""
+        self.cursor.execute(d_sql, (data['task_name'], data['task_type']))
+        self.cursor.execute(d_p_sql, (data['task_name'], data['task_type']))
+        self.conn.commit()
+        a.exitSignal.connect(self.output)
+        self.thread1 = threading.Thread(target=a.run, name='main')
+        self.thread1.start()
+        i_sql = """insert into params(taskNm, taskType, sampleNm, barcode, filepath)values (?,?,?,?,?)"""
+        self.cursor.execute(i_sql,
+                            (data['task_name'], data['task_type'], ','.join(data['sample_list']),
+                             ','.join(data['barcode_list']),
+                             data['result_path']))
+        self.conn.commit()
 
     def judge_path(self, file_path):
         """

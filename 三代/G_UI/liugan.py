@@ -202,7 +202,7 @@ class Ui_Dialog(QWidget):
                 'barcode_list': '',
                 'fastq_file': fastq_file,
                 'work_file': result_file}
-            print(parmas)
+            # print(parmas)
             self.paramSignal.emit(parmas)
             self.Dialog.close()
 
