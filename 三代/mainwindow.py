@@ -216,7 +216,7 @@ class Ui_MainWindow(QObject):
         font1 = QtGui.QFont()
         font1.setPointSize(11)
         child_icon = qtawesome.icon('fa.arrow-right', color='black')
-        for _ in range(3):
+        for _ in range(2):
             item_1 = QtWidgets.QTreeWidgetItem(item_0)
             item_1.setFont(0, font1)
             item_1.setIcon(0, child_icon)
@@ -358,7 +358,6 @@ class Ui_MainWindow(QObject):
         self.typeTree.topLevelItem(0).setText(0, self._translate("MainWindow", "Nanopore新冠病毒"))
         self.typeTree.topLevelItem(0).child(0).setText(0, self._translate("MainWindow", "序列拼接"))
         self.typeTree.topLevelItem(0).child(1).setText(0, self._translate("MainWindow", "相似序列查找"))
-        self.typeTree.topLevelItem(0).child(2).setText(0, self._translate("MainWindow", "分子进化树"))
         self.typeTree.topLevelItem(1).setText(0, self._translate("MainWindow", "Nanopore未知病原"))
         self.typeTree.topLevelItem(1).child(0).setText(0, self._translate("MainWindow", "序列分类"))
         self.typeTree.topLevelItem(1).child(1).setText(0, self._translate("MainWindow", "可视化分析"))
@@ -420,8 +419,6 @@ class Ui_MainWindow(QObject):
         child_ui = ''
         if current_tree in ['Nanopore流感病毒拼接']:
             child_ui = Liugan_UI()
-        elif current_tree == '分子进化树':
-            child_ui = Nuoru_Ui()
         elif current_tree == '相似序列查找':
             child_ui = Xvlie_UI()
         elif current_tree == '序列提取':
@@ -507,8 +504,6 @@ class Ui_MainWindow(QObject):
             elif self.typeTree.currentItem().text(0) == '诺如病毒':
                 file_name = config.get('Norovirus', 'file_name')
                 self.do_snakemake(self.params, file_name, self.nuoru_file_list)
-            elif self.typeTree.currentItem().text(0) == '分子进化树':
-                self.do_jinhuashu(self.params)
             elif self.typeTree.currentItem().text(0) == '序列提取':
                 self.do_xvlietiqu(self.params)
             elif self.typeTree.currentItem().text(0) == 'Nanopore流感病毒拼接':
@@ -784,51 +779,6 @@ class Ui_MainWindow(QObject):
                             (data['task_name'], data['task_type'], ','.join(data['sample_list']), ','.join(data['barcode_list']),
                              data['work_file']))
         self.conn.commit()
-
-    def do_jinhuashu(self, data):
-        """
-        执行分子进化树的snakemake命令
-        :param data: 程序运行的参数
-        :return:
-        """
-        a = RunJinhuashu(data)
-        flag = 0
-        work_file = data['work_file']
-        task_name = data['task_name']
-        s_sql = """select * from task where taskNm = ? and taskType=?"""
-        result = self.cursor.execute(s_sql, (task_name, data['task_type']))
-        task_data = result.fetchall()
-        if os.path.exists(work_file) and (task_name in os.listdir(work_file) or len(task_data) > 0):
-            reply = QMessageBox.warning(self.centralwidget, '警告', '当前任务已存在，是否删除？', QMessageBox.Yes | QMessageBox.No)
-            if reply == QMessageBox.Yes:
-                try:
-                    if os.path.exists(work_file + '/' + task_name):
-                        shutil.rmtree(work_file + '/' + task_name)
-                    d_sql = """delete from task where taskNm=? and taskType=?"""
-                    d_p_sql = """delete from params where taskNm=? and taskType=?"""
-                    self.cursor.execute(d_sql, (task_name, data['task_type']))
-                    self.conn.commit()
-                    self.cursor.execute(d_p_sql, (task_name, data['task_type']))
-                    self.conn.commit()
-                    flag = 1
-                except Exception as e:
-                    logger.error(f'数据库删除失败：{str(e)}')
-            elif reply == QMessageBox.No:
-                self.status = '停止运行'
-                QMessageBox.information(self.centralwidget, '提示', '程序已停止运行', QMessageBox.Ok)
-        elif os.path.exists(work_file) and task_name not in os.listdir(work_file):
-            flag = 1
-        else:
-            QMessageBox.warning(self.centralwidget, '警告', f'{work_file} 不存在', QMessageBox.Ok)
-        if flag == 1:
-            a.exitSignal.connect(self.output)
-            self.thread1 = threading.Thread(target=a.run, name='main')
-            self.thread1.start()
-            i_sql = """insert into params(taskNm, taskType, sampleNm, barcode, filepath)values (?,?,?,?,?)"""
-            self.cursor.execute(i_sql,
-                                (data['task_name'], data['task_type'], ','.join(data['sample_list']), ','.join(data['barcode_list']),
-                                 data['work_file']))
-            self.conn.commit()
 
     def do_datacontrol(self, data):
         """
