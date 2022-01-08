@@ -174,7 +174,7 @@ class Ui_Dialog(QWidget):
         self.retranslateUi(Dialog)
         QtCore.QMetaObject.connectSlotsByName(Dialog)
 
-        self.xvlie_tbtn.clicked.connect(lambda: self.choose_path(self.xvlie_LE))
+        self.xvlie_tbtn.clicked.connect(lambda: self.open_file(self.xvlie_LE))
         self.info_tbtn.clicked.connect(lambda: self.open_file(self.info_LE))
         self.result_tbtn.clicked.connect(lambda: self.choose_path(self.result_LE))
 
@@ -195,7 +195,6 @@ class Ui_Dialog(QWidget):
         self.run_btn.setText(_translate("Dialog", "运行"))
         self.cancel_btn.setText(_translate("Dialog", "取消"))
 
-
     def open_file(self, lineEdit):
         """
         选择具体的文件
@@ -207,7 +206,7 @@ class Ui_Dialog(QWidget):
 
     def choose_path(self, lineEdit):
         """
-        选择结果存放路径
+        选择具体的文件路径
         :param lineEdit: 将内容写入具体的文本框
         :return:
         """
