@@ -25,29 +25,38 @@ class RunPythonFile(QObject):
         logger.info(f'程序运行参数为：{data}')
 
         # 任务类别
-        self.task_type = data['task_type']
+        self.task_type = data.get('task_type')
 
         # 任务名称（结果文件名称/样品名称）
-        self.task_name = data['task_name']
+        self.task_name = data.get('task_name')
 
         # 起始路径
-        self.ori_path = data['ori_path']
+        self.ori_path = data.get('ori_path')
 
         # 结果路径
-        self.result_path = data['result_path']
+        self.result_path = data.get('result_path')
 
         # 列表文件
-        self.list_path = data['list_path']
+        self.list_path = data.get('list_path')
 
         # 线程数
-        self.thread_ = data['threads']
+        self.thread_ = data.get('threads')
 
+        """溯源与分子进化树"""
+        # 序列文件
+        self.xvlie_file = data.get('xvlie_file')
+        # 序列信息
+        self.xvlie_info = data.get('xvlie_info')
 
-        # 宏基因组特有参数
+        """宏基因组特有参数"""
         # 模型文件
         self.model_file = data.get('model_name', '')
         # 纠错次数
         self.count = data.get('count', '')
+
+        """新冠病毒序列拼接"""
+        # dateset
+        self.data_set = data.get('data_set')
 
         # 测序类型
         self.cexv_type = data.get('cexv_type', '')
@@ -182,6 +191,116 @@ class RunPythonFile(QObject):
             logger.error(f'{self.task_name} {self.status}：{e.stderr}')
             quit()
 
+    def xinguan_suyuan(self):
+        """
+        新冠-溯源与分子进化树
+        :param sample: 样品名称
+        :return:
+        """
+        try:
+            file_comm = f'python {exepath}/G_CONFIG/ncov_trace_tree.py -fasta_file {self.xvlie_file} -meta_file {self.xvlie_info} -result_path ' \
+                        f'{self.result_path} -num_seqs {self.count} '
+            logger.info(f'命令如下：{file_comm}')
+            u_sql = 'update task set taskStatus=? where taskNm=? and taskType=?'
+            # 将当前任务状态更新到数据库中，以便页面展示
+            self.status = '正在运行'
+            self.cursor.execute(u_sql, (self.status, self.task_name, self.task_type))
+            self.conn.commit()
+            self.exitSignal.emit(self.status)
+
+            thi_res = subprocess.run(file_comm, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+                                     universal_newlines=True, shell=True)
+            if thi_res.returncode == 0:
+                logger.info('执行成功')
+                logger.info(thi_res.stdout)
+            else:
+                self.status = '执行失败！'
+                logger.error(f'执行出错：{thi_res.stdout}')
+        except subprocess.CalledProcessError as e:
+            self.status = '执行失败！'
+            # self.result = self.status + '：' + str(e.stderr)
+            self.result = self.status + f'错误详情可查看：{exepath}/logs/task.log'
+            self.exitSignal.emit(self.result)
+            u_sql = """update task set taskStatus=?, endTime=?, taskResult=? where taskNm=? and taskType=?"""
+            end_time = str(datetime.now()).split('.')[0]
+            self.cursor.execute(u_sql, (self.status, end_time, self.result, self.task_name, self.task_type))
+            self.conn.commit()
+            logger.error(f'{self.task_name} {self.status}：{e.stderr}')
+            quit()
+
+    def xinguan_xlpj(self):
+        """
+        新冠-新冠病毒序列拼接
+        :param sample: 样品名称
+        :return:
+        """
+        try:
+            file_comm = f'python {exepath}/G_CONFIG/erdai/ncov_illumina_assemble.py -raw_path {self.ori_path} -sample_lsit {self.list_path} ' \
+                        f'-result_path {self.result_path} -dataset {self.data_set}'
+            logger.info(f'命令如下：{file_comm}')
+            u_sql = 'update task set taskStatus=? where taskNm=? and taskType=?'
+            # 将当前任务状态更新到数据库中，以便页面展示
+            self.status = '正在运行'
+            self.cursor.execute(u_sql, (self.status, self.task_name, self.task_type))
+            self.conn.commit()
+            self.exitSignal.emit(self.status)
+
+            thi_res = subprocess.run(file_comm, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+                                     universal_newlines=True, shell=True)
+            if thi_res.returncode == 0:
+                logger.info('执行成功')
+                logger.info(thi_res.stdout)
+            else:
+                self.status = '执行失败！'
+                logger.error(f'执行出错：{thi_res.stdout}')
+        except subprocess.CalledProcessError as e:
+            self.status = '执行失败！'
+            # self.result = self.status + '：' + str(e.stderr)
+            self.result = self.status + f'错误详情可查看：{exepath}/logs/task.log'
+            self.exitSignal.emit(self.result)
+            u_sql = """update task set taskStatus=?, endTime=?, taskResult=? where taskNm=? and taskType=?"""
+            end_time = str(datetime.now()).split('.')[0]
+            self.cursor.execute(u_sql, (self.status, end_time, self.result, self.task_name, self.task_type))
+            self.conn.commit()
+            logger.error(f'{self.task_name} {self.status}：{e.stderr}')
+            quit()
+
+    def xinguan_xlfx(self):
+        """
+        新冠-新冠病毒序列分析
+        :param sample: 样品名称
+        :return:
+        """
+        try:
+            file_comm = f'python {exepath}/G_CONFIG/ncov_analyze.py -fasta_file {self.xvlie_file} -result_path {self.result_path}'
+            logger.info(f'命令如下：{file_comm}')
+            u_sql = 'update task set taskStatus=? where taskNm=? and taskType=?'
+            # 将当前任务状态更新到数据库中，以便页面展示
+            self.status = '正在运行'
+            self.cursor.execute(u_sql, (self.status, self.task_name, self.task_type))
+            self.conn.commit()
+            self.exitSignal.emit(self.status)
+
+            thi_res = subprocess.run(file_comm, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+                                     universal_newlines=True, shell=True)
+            if thi_res.returncode == 0:
+                logger.info('执行成功')
+                logger.info(thi_res.stdout)
+            else:
+                self.status = '执行失败！'
+                logger.error(f'执行出错：{thi_res.stdout}')
+        except subprocess.CalledProcessError as e:
+            self.status = '执行失败！'
+            # self.result = self.status + '：' + str(e.stderr)
+            self.result = self.status + f'错误详情可查看：{exepath}/logs/task.log'
+            self.exitSignal.emit(self.result)
+            u_sql = """update task set taskStatus=?, endTime=?, taskResult=? where taskNm=? and taskType=?"""
+            end_time = str(datetime.now()).split('.')[0]
+            self.cursor.execute(u_sql, (self.status, end_time, self.result, self.task_name, self.task_type))
+            self.conn.commit()
+            logger.error(f'{self.task_name} {self.status}：{e.stderr}')
+            quit()
+
     def insert_db(self):
         # 运行前将任务参数存储到数据库中
         try:
@@ -220,6 +339,12 @@ class RunPythonFile(QObject):
             self.weizhi_xlfl()
         elif self.task_type == '宏基因组-从头拼接':
             self.honjiy_ctpj()
+        elif '溯源与分子进化树' in self.task_type:
+            self.xinguan_suyuan()
+        elif '新冠病毒序列拼接' in self.task_type:
+            self.xinguan_xlpj()
+        elif '新冠病毒序列分析' in self.task_type:
+            self.xinguan_xlfx()
         else:
             self.cexv_ctpj()
 
