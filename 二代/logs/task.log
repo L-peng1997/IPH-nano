@@ -3133,3 +3133,23 @@ SystemExit: None
 2021-12-14 14:43:39.069 | INFO     | G_COMM.runPythonFile:cexv_ctpj:121 - 命令如下：python D:/工作项目/高通量测序/二代/G_CONFIG/erdai/ngs_denove.py -raw_path 1 -list_file 2 -result_path 3 -type PE -threads 16 -meta
 2021-12-14 14:43:39.341 | ERROR    | G_COMM.runPythonFile:cexv_ctpj:146 - 1 执行失败！：python: can't open file '<unprintable file name>': [Errno 2] No such file or directory
 
+2022-01-23 06:03:48.721 | INFO     | G_COMM.runPythonFile:__init__:25 - 程序运行参数为：{'task_type': '新冠病毒illumina测序数据分析-溯源与分子进化树', 'task_name': '1', 'sample_list': '', 'barcode_list': '', 'result_path': '3', 'xvlie_file': '1', 'xvlie_info': '2', 'count': '4'}
+2022-01-23 06:04:20.745 | INFO     | G_COMM.runPythonFile:__init__:25 - 程序运行参数为：{'task_type': '新冠病毒illumina测序数据分析-溯源与分子进化树', 'task_name': '1', 'sample_list': '', 'barcode_list': '', 'result_path': '3', 'xvlie_file': '1', 'xvlie_info': '2', 'count': '4'}
+2022-01-23 06:05:55.032 | INFO     | G_COMM.runPythonFile:__init__:25 - 程序运行参数为：{'task_type': '新冠病毒illumina测序数据分析-溯源与分子进化树', 'task_name': '1', 'sample_list': '', 'barcode_list': '', 'result_path': '3', 'xvlie_file': '1', 'xvlie_info': '2', 'count': '4'}
+2022-01-23 06:05:55.165 | INFO     | G_COMM.runPythonFile:xinguan_suyuan:199 - 命令如下：python D:/工作项目/IPH-nano/二代/G_CONFIG/ncov_trace_tree.py -fasta_file 1 -meta_file 2 -result_path 3 -num_seqs 4 
+2022-01-23 06:52:52.803 | INFO     | G_COMM.runPythonFile:__init__:25 - 程序运行参数为：{'task_type': '新冠病毒illumina测序数据分析-新冠病毒序列拼接', 'task_name': '1', 'sample_list': '', 'barcode_list': '', 'result_path': '3', 'ori_path': '1', 'list_path': '2', 'data_set': '/home/admin1/IPH-nano/dataset'}
+2022-01-23 06:53:22.125 | INFO     | G_COMM.runPythonFile:xinguan_xlpj:240 - 命令如下：python D:/工作项目/IPH-nano/二代/G_CONFIG/erdai/ncov_illumina_assemble.py -raw_path 1 -sample_lsit 2 -result_path 3 -dataset /home/admin1/IPH-nano/dataset
+2022-01-23 06:53:30.359 | ERROR    | G_COMM.runPythonFile:xinguan_xlpj:265 - 1 执行失败！：python: can't open file '<unprintable file name>': [Errno 2] No such file or directory
+
+2022-01-23 06:54:38.289 | INFO     | G_COMM.runPythonFile:__init__:25 - 程序运行参数为：{'task_type': '新冠病毒illumina测序数据分析-新冠病毒序列拼接', 'task_name': '1', 'sample_list': '', 'barcode_list': '', 'result_path': '3', 'ori_path': '1', 'list_path': '2', 'data_set': '/home/admin1/IPH-nano/dataset'}
+2022-01-23 06:54:38.804 | INFO     | G_COMM.runPythonFile:xinguan_xlpj:240 - 命令如下：python D:/工作项目/IPH-nano/二代/G_CONFIG/erdai/ncov_illumina_assemble.py -raw_path 1 -sample_lsit 2 -result_path 3 -dataset /home/admin1/IPH-nano/dataset
+2022-01-23 06:54:39.096 | ERROR    | G_COMM.runPythonFile:xinguan_xlpj:265 - 1 执行失败！：python: can't open file '<unprintable file name>': [Errno 2] No such file or directory
+
+2022-01-23 06:55:24.753 | INFO     | G_COMM.runPythonFile:__init__:25 - 程序运行参数为：{'task_type': '新冠病毒illumina测序数据分析-新冠病毒序列拼接', 'task_name': '1', 'sample_list': '', 'barcode_list': '', 'result_path': '3', 'ori_path': '1', 'list_path': '2', 'data_set': '4'}
+2022-01-23 06:55:35.551 | INFO     | G_COMM.runPythonFile:xinguan_xlpj:240 - 命令如下：python D:/工作项目/IPH-nano/二代/G_CONFIG/erdai/ncov_illumina_assemble.py -raw_path 1 -sample_lsit 2 -result_path 3 -dataset 4
+2022-01-23 06:55:56.324 | INFO     | G_COMM.runPythonFile:__init__:25 - 程序运行参数为：{'task_type': '新冠病毒illumina测序数据分析-新冠病毒序列拼接', 'task_name': '1', 'sample_list': '', 'barcode_list': '', 'result_path': '3', 'ori_path': '1', 'list_path': '2', 'data_set': '/home/admin1/IPH-nano/dataset'}
+2022-01-23 06:56:03.053 | INFO     | G_COMM.runPythonFile:xinguan_xlpj:240 - 命令如下：python D:/工作项目/IPH-nano/二代/G_CONFIG/erdai/ncov_illumina_assemble.py -raw_path 1 -sample_lsit 2 -result_path 3 -dataset /home/admin1/IPH-nano/dataset
+2022-01-23 07:26:38.967 | INFO     | G_COMM.runPythonFile:__init__:25 - 程序运行参数为：{'task_type': '新冠病毒illumina测序数据分析-新冠病毒序列分析', 'task_name': '1642893991924', 'sample_list': '', 'barcode_list': '', 'result_path': '2', 'xvlie_file': '1'}
+2022-01-23 07:26:56.177 | INFO     | G_COMM.runPythonFile:xinguan_xlfx:276 - 命令如下：python D:/工作项目/IPH-nano/二代/G_CONFIG/ncov_analyze.py -fasta_file 1 -result_path 2
+2022-01-23 07:28:48.482 | INFO     | G_COMM.runPythonFile:__init__:25 - 程序运行参数为：{'task_type': '新冠病毒illumina测序数据分析-新冠病毒序列分析', 'task_name': '1642894124785', 'sample_list': '', 'barcode_list': '', 'result_path': '2', 'xvlie_file': '1'}
+2022-01-23 07:28:52.397 | INFO     | G_COMM.runPythonFile:xinguan_xlfx:276 - 命令如下：python D:/工作项目/IPH-nano/二代/G_CONFIG/ncov_analyze.py -fasta_file 1 -result_path 2

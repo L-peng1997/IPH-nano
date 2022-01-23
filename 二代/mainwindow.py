@@ -33,9 +33,9 @@ from G_COMM.runPythonFile import RunPythonFile
 from G_UI.erdai_xvliepj import Ui_Dialog as Erxlpj_UI
 from G_UI.erdai_zhikong import Ui_Dialog as Zhikong_UI
 from G_UI.nuoru import Ui_Dialog as Nuoru_Ui
-from G_UI.weizhi_xvlietiqu import Ui_Dialog as Xvlietiqu_UI
-from G_UI.xinguan_cexv import Ui_Dialog as Xinguan_Ui
-from G_UI.xinguan_xlcz import Ui_Dialog as Xvlie_UI
+from G_UI.xinguan_xlpj import Ui_Dialog as Xlpj_UI
+from G_UI.xinguan_suyuan import Ui_Dialog as Suyuan_UI
+from G_UI.xinguan_xlfx import Ui_Dialog as Xlfx_UI
 # 2021-12-05 19:47:47 添加界面
 from G_UI.weizhi_xlfl import Ui_Dialog as WZxlfl_UI
 from G_UI.erdai_ctpj import Ui_Dialog as EDctpj_UI
@@ -205,24 +205,38 @@ class Ui_MainWindow(QObject):
         # self.typeTree.setLayoutDirection(Qt.RightToLeft)
         # self.typeTree.setRootIsDecorated(False)
 
-        #新冠
+        # 新冠病毒illumina测序数据分析
         item_0 = QtWidgets.QTreeWidgetItem(self.typeTree)
         item_0.setIcon(0, QIcon(f'{base_path}/img/xinguan.png'))
         # 在新冠节点下建立子节点
         font1 = QtGui.QFont()
         font1.setPointSize(11)
         child_icon = qtawesome.icon('fa.arrow-right', color='black')
-        for _ in range(4):
+        for _ in range(3):
             item_1 = QtWidgets.QTreeWidgetItem(item_0)
             item_1.setFont(0, font1)
             item_1.setIcon(0, child_icon)
-        # 诺如
+
+        # illumina高通量测序
+        item_0 = QtWidgets.QTreeWidgetItem(self.typeTree)
+        item_0.setIcon(0, QIcon(f'{base_path}/img/cexv.png'))
+        # 在新冠节点下建立子节点
+        font1 = QtGui.QFont()
+        font1.setPointSize(11)
+        child_icon = qtawesome.icon('fa.arrow-right', color='black')
+        for _ in range(2):
+            item_1 = QtWidgets.QTreeWidgetItem(item_0)
+            item_1.setFont(0, font1)
+            item_1.setIcon(0, child_icon)
+
+
+        # 诺如病毒illumina数据分析
         item_0 = QtWidgets.QTreeWidgetItem(self.typeTree)
         item_0.setIcon(0, QIcon(f'{base_path}/img/nuoru.png'))
-        # 未知病原
+        # 未知病原illumina测序数据分析
         item_0 = QtWidgets.QTreeWidgetItem(self.typeTree)
         item_0.setIcon(0, QIcon(f'{base_path}/img/weizhi.png'))
-        for i in range(4):
+        for i in range(3):
             item_1 = QtWidgets.QTreeWidgetItem(item_0)
             item_1.setFont(0, font1)
             if i == 1:
@@ -342,16 +356,17 @@ class Ui_MainWindow(QObject):
         __sortingEnabled = self.typeTree.isSortingEnabled()
         self.typeTree.setSortingEnabled(False)
         self.typeTree.topLevelItem(0).setText(0, self._translate("MainWindow", "新冠病毒illumina测序数据分析"))
-        self.typeTree.topLevelItem(0).child(0).setText(0, self._translate("MainWindow", "数据质控"))
-        self.typeTree.topLevelItem(0).child(1).setText(0, self._translate("MainWindow", "序列拼接(基于参考序列)"))
-        self.typeTree.topLevelItem(0).child(2).setText(0, self._translate("MainWindow", "相似序列查找"))
-        self.typeTree.topLevelItem(0).child(3).setText(0, self._translate("MainWindow", "分子进化树"))
-        self.typeTree.topLevelItem(1).setText(0, self._translate("MainWindow", "诺如病毒illumina数据分析"))
-        self.typeTree.topLevelItem(2).setText(0, self._translate("MainWindow", "未知病原illumina测序数据分析"))
-        self.typeTree.topLevelItem(2).child(0).setText(0, self._translate("MainWindow", "序列分类"))
-        self.typeTree.topLevelItem(2).child(1).setText(0, self._translate("MainWindow", "可视化分析"))
-        self.typeTree.topLevelItem(2).child(2).setText(0, self._translate("MainWindow", "序列提取"))
-        self.typeTree.topLevelItem(2).child(3).setText(0, self._translate("MainWindow", "从头拼接"))
+        self.typeTree.topLevelItem(0).child(0).setText(0, self._translate("MainWindow", "新冠病毒序列拼接"))
+        self.typeTree.topLevelItem(0).child(1).setText(0, self._translate("MainWindow", "新冠病毒序列分析"))
+        self.typeTree.topLevelItem(0).child(2).setText(0, self._translate("MainWindow", "溯源与分子进化树"))
+        self.typeTree.topLevelItem(1).setText(0, self._translate("MainWindow", "illumina高通量测序"))
+        self.typeTree.topLevelItem(1).child(0).setText(0, self._translate("MainWindow", "数据质控"))
+        self.typeTree.topLevelItem(1).child(1).setText(0, self._translate("MainWindow", "序列拼接(基于参考序列)"))
+        self.typeTree.topLevelItem(2).setText(0, self._translate("MainWindow", "诺如病毒illumina数据分析"))
+        self.typeTree.topLevelItem(3).setText(0, self._translate("MainWindow", "未知病原illumina测序数据分析"))
+        self.typeTree.topLevelItem(3).child(0).setText(0, self._translate("MainWindow", "序列分类"))
+        self.typeTree.topLevelItem(3).child(1).setText(0, self._translate("MainWindow", "可视化分析"))
+        self.typeTree.topLevelItem(3).child(2).setText(0, self._translate("MainWindow", "从头拼接"))
         self.typeTree.setSortingEnabled(__sortingEnabled)
         self.typeTree.itemClicked.connect(self.tree_click)
         self.typeTree.itemClicked.connect(self.refresh_table)
@@ -402,10 +417,6 @@ class Ui_MainWindow(QObject):
         child_ui = ''
         if current_tree in ['诺如病毒illumina数据分析']:
             child_ui = Nuoru_Ui()
-        elif current_tree == '相似序列查找':    # 新冠
-            child_ui = Xvlie_UI()
-        elif current_tree == '序列提取':    # 未知
-            child_ui = Xvlietiqu_UI()
         elif current_tree == '序列拼接(基于参考序列)':    # 二代
             child_ui = Erxlpj_UI()
         elif current_tree == '数据质控':
@@ -414,6 +425,12 @@ class Ui_MainWindow(QObject):
             child_ui = WZxlfl_UI()
         elif current_tree == '从头拼接':
             child_ui = EDctpj_UI()
+        elif current_tree == '溯源与分子进化树':
+            child_ui = Suyuan_UI()
+        elif current_tree == '新冠病毒序列拼接':
+            child_ui = Xlpj_UI()
+        elif current_tree == '新冠病毒序列分析':
+            child_ui = Xlfx_UI()
         else:
             QMessageBox.warning(self.centralwidget, '警告', '请选择具体的功能节点', QMessageBox.Ok)
         if child_ui:
@@ -452,24 +469,19 @@ class Ui_MainWindow(QObject):
         """
         if signal == 1:
             # print(f'开始运行程序，参数为{data}')
+            # 需要调用python文件的节点
+            pyfile_list = ['序列分类', '从头拼接', '溯源与分子进化树', '新冠病毒序列拼接', '新冠病毒序列分析']
             # 运行程序
-            if self.typeTree.currentItem().text(0) == '相似序列查找':
-                file_name = config.get('SARS2_analyze', 'analyse_file')
-                self.do_snakemake(self.params, file_name, self.xg_analyse_file_list)
-            elif self.typeTree.currentItem().text(0) == '诺如病毒illumina数据分析':
+            if self.typeTree.currentItem().text(0) == '诺如病毒illumina数据分析':
                 file_name = config.get('Norovirus', 'file_name')
                 self.do_snakemake(self.params, file_name, self.nuoru_file_list)
             elif self.typeTree.currentItem().text(0) == '未知病原illumina测序数据分析':
                 self.do_weizhi(self.params)
-            elif self.typeTree.currentItem().text(0) == '分子进化树':
-                self.do_jinhuashu(self.params)
-            elif self.typeTree.currentItem().text(0) == '序列提取':
-                self.do_xvlietiqu(self.params)
             elif self.typeTree.currentItem().text(0) in ['数据质控', '新冠病毒illumina测序数据分析']:
                 self.do_datacontrol(self.params)
             elif self.typeTree.currentItem().text(0) == '序列拼接(基于参考序列)':
                 self.do_erdaixlpj(self.params)
-            elif self.typeTree.currentItem().text(0) in ['序列分类', '从头拼接']:
+            elif self.typeTree.currentItem().text(0) in pyfile_list:
                 self.do_pyfile(self.params)
             start_ = QDateTime.currentDateTime()
             self.start_time = start_.toString('yyyy-MM-dd hh:mm:ss')
@@ -492,10 +504,6 @@ class Ui_MainWindow(QObject):
                     result = re.findall(r'0\.rawdata', dir_data)
                 elif self.typeTree.currentItem().text(0) in ['未知病原illumina测序数据分析', '流感病毒', '宏基因组']:
                     result = re.findall(r'barcode\d+', dir_data)
-                elif self.typeTree.currentItem().text(0) == '相似序列查找':
-                    start_file = config.get('SARS2_analyze', 'start_file').split(',')
-                    file_list = os.listdir(file_path + "/0.data")
-                    result = True if set(start_file).issubset(set(file_list)) else False
             except Exception as e:
                 QMessageBox.warning(self.centralwidget, '警告', f'运行失败：起始文件夹判断失败,{e}！！！', QMessageBox.Ok)
         if result:
@@ -632,51 +640,6 @@ class Ui_MainWindow(QObject):
                             (data['task_name'], data['task_type'], ','.join(data['sample_list']), ','.join(data['barcode_list']),
                              data['work_file']))
         self.conn.commit()
-
-    def do_jinhuashu(self, data):
-        """
-        执行分子进化树的snakemake命令
-        :param data: 程序运行的参数
-        :return:
-        """
-        a = RunJinhuashu(data)
-        flag = 0
-        work_file = data['work_file']
-        task_name = data['task_name']
-        s_sql = """select * from task where taskNm = ? and taskType=?"""
-        result = self.cursor.execute(s_sql, (task_name, data['task_type']))
-        task_data = result.fetchall()
-        if os.path.exists(work_file) and (task_name in os.listdir(work_file) or len(task_data) > 0):
-            reply = QMessageBox.warning(self.centralwidget, '警告', '当前任务已存在，是否删除？', QMessageBox.Yes | QMessageBox.No)
-            if reply == QMessageBox.Yes:
-                try:
-                    if os.path.exists(work_file + '/' + task_name):
-                        shutil.rmtree(work_file + '/' + task_name)
-                    d_sql = """delete from task where taskNm=? and taskType=?"""
-                    d_p_sql = """delete from params where taskNm=? and taskType=?"""
-                    self.cursor.execute(d_sql, (task_name, data['task_type']))
-                    self.conn.commit()
-                    self.cursor.execute(d_p_sql, (task_name, data['task_type']))
-                    self.conn.commit()
-                    flag = 1
-                except Exception as e:
-                    logger.error(f'数据库删除失败：{str(e)}')
-            elif reply == QMessageBox.No:
-                self.status = '停止运行'
-                QMessageBox.information(self.centralwidget, '提示', '程序已停止运行', QMessageBox.Ok)
-        elif os.path.exists(work_file) and task_name not in os.listdir(work_file):
-            flag = 1
-        else:
-            QMessageBox.warning(self.centralwidget, '警告', f'{work_file} 不存在', QMessageBox.Ok)
-        if flag == 1:
-            a.exitSignal.connect(self.output)
-            self.thread1 = threading.Thread(target=a.run, name='main')
-            self.thread1.start()
-            i_sql = """insert into params(taskNm, taskType, sampleNm, barcode, filepath)values (?,?,?,?,?)"""
-            self.cursor.execute(i_sql,
-                                (data['task_name'], data['task_type'], ','.join(data['sample_list']), ','.join(data['barcode_list']),
-                                 data['work_file']))
-            self.conn.commit()
 
     def do_datacontrol(self, data):
         """
@@ -1009,8 +972,6 @@ class Ui_MainWindow(QObject):
                 result_file_list = []
                 if self.typeTree.currentItem().text(0) == '诺如病毒illumina数据分析':
                     result_file_list = self.nuoru_file_list
-                elif self.typeTree.currentItem().text(0) == '相似序列查找':
-                    result_file_list = self.xg_analyse_file_list
                 for file in result_file_list:
                     if os.path.exists(path + '/' + file):
                         shutil.rmtree(path + '/' + file)
