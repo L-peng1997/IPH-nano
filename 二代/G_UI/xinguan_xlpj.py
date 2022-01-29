@@ -228,12 +228,13 @@ class Ui_Dialog(QWidget):
         ori_path = self.ori_LE.text()
         # 列表文件
         list_path = self.list_LE.text()
+        list_path = list_path if list_path else 'None'
         # 结果路径
         result_path = self.result_LE.text()
         # dateset
         data_set = self.dataset_LE.text()
 
-        if not ori_path or not list_path or not data_set or not result_path:
+        if not ori_path or not data_set or not result_path:
             QMessageBox.warning(self, '警告', '参数不能为空！', QMessageBox.Ok)
         else:
             self.signal = 1

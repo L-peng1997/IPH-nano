@@ -83,45 +83,10 @@ class RunPythonFile(QObject):
         result = path_com.stdout.read()
         logger.info(f'当前环境变量为{result}')
 
-    def honjiy_ctpj(self):
+    def weizhi_ctpj(self):
         """
         执行python文件中的命令
-        :param sample: 样品名称
-        :return:
-        """
-        try:
-            sec_comm = f'python {exepath}/G_CONFIG/Metagenome/ont_denovo.py -raw_path {self.ori_path} -list_file {self.list_path} -result_path {self.result_path} -model {self.model_file} -repeat {self.count} -threads {self.thread_}'
-            logger.info(f'命令如下：{sec_comm}')
-            u_sql = 'update task set taskStatus=? where taskNm=? and taskType=?'
-            # 将当前任务状态更新到数据库中，以便页面展示
-            self.status = '正在运行'
-            self.cursor.execute(u_sql, (self.status, self.task_name, self.task_type))
-            self.conn.commit()
-            self.exitSignal.emit(self.status)
-
-            sec_res = subprocess.run(sec_comm, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
-                                     universal_newlines=True, shell=True)
-            if sec_res.returncode == 0:
-                logger.info('执行成功')
-                logger.info(sec_res.stdout)
-            else:
-                self.status = '执行失败！'
-                logger.error(f'执行出错：{sec_res.stdout}')
-        except subprocess.CalledProcessError as e:
-            self.status = '执行失败！'
-            # self.result = self.status + '：' + e.stderr
-            self.result = self.status + f'错误详情可查看：{exepath}/logs/task.log'
-            self.exitSignal.emit(self.result)
-            u_sql = """update task set taskStatus=?, endTime=?, taskResult=? where taskNm=? and taskType=?"""
-            end_time = str(datetime.now()).split('.')[0]
-            self.cursor.execute(u_sql, (self.status, end_time, self.result, self.task_name, self.task_type))
-            self.conn.commit()
-            logger.error(f'{self.task_name} {self.status}：{e.stderr}')
-            quit()
-
-    def cexv_ctpj(self):
-        """
-        执行python文件中的命令
+        未知病原-从头拼接
         :param sample: 样品名称
         :return:
         """
@@ -158,6 +123,7 @@ class RunPythonFile(QObject):
     def weizhi_xlfl(self):
         """
         执行python文件中的命令
+        未知病原-序列分类
         :param sample: 样品名称
         :return:
         """
@@ -337,8 +303,8 @@ class RunPythonFile(QObject):
         self.insert_db()
         if self.task_type == '未知病原illumina测序数据分析-序列分类':
             self.weizhi_xlfl()
-        elif self.task_type == '宏基因组-从头拼接':
-            self.honjiy_ctpj()
+        elif self.task_type == '未知病原illumina测序数据分析-从头拼接':
+            self.weizhi_ctpj()
         elif '溯源与分子进化树' in self.task_type:
             self.xinguan_suyuan()
         elif '新冠病毒序列拼接' in self.task_type:
@@ -346,9 +312,9 @@ class RunPythonFile(QObject):
         elif '新冠病毒序列分析' in self.task_type:
             self.xinguan_xlfx()
         else:
-            self.cexv_ctpj()
+            self.status = f'暂不支持该功能：{self.task_type}'
 
-        self.status = '已完成'
+        self.status = '已完成' if '暂不支持' not in self.status else f'暂不支持该功能：{self.task_type}'
         self.exitSignal.emit(self.status)
         # # 程序运行结束后，更新数据库中任务信息
         u_sql = """update task set taskStatus=?, endTime=?, taskResult=? where taskNm=? and taskType=?"""
