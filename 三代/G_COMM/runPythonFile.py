@@ -49,13 +49,8 @@ class RunPythonFile(QObject):
             # 测序类型
             self.cexv_type = data.get('cexv_type')   # 未知病原-序列分类
             # Primmer Schemes
-            self.schemes = data.get('schemes')   # 新冠-序列拼接
-            # Primmer Detail
-            self.detail = data.get('detail')   # 新冠-序列拼接
-            # Max Length Filt
-            self.max_length = data.get('max_length')   # 新冠-序列拼接
-            # Min Length Filt
-            self.min_length = data.get('min_length')   # 新冠-序列拼接
+            self.primmer = data.get('primmer')   # 新冠-序列拼接
+
         else:
             # 序列文件
             self.xvlie_file = data.get('xvlie_file')
@@ -213,8 +208,7 @@ class RunPythonFile(QObject):
         """
         try:
             file_comm = f'python {exepath}/G_CONFIG/ncov_assemble.py -raw_path {self.ori_path} -list_file {self.list_path} -result_path {self.result_path} ' \
-                       f'-primmer_schemes {self.schemes} -model {self.model_file} -primmer_detail {self.detail} ' \
-                       f'-max_length {self.max_length} -min_length {self.min_length}'
+                       f'-model {self.model_file} -primmer_version {self.primmer}'
             logger.info(f'命令如下：{file_comm}')
             u_sql = 'update task set taskStatus=? where taskNm=? and taskType=?'
             # 将当前任务状态更新到数据库中，以便页面展示

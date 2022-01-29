@@ -430,10 +430,12 @@ class Ui_MainWindow(QObject):
                 try:
                     con_model = config.get('Metagenome', 'model_list')
                     model_list = con_model.split(',')
+                    pri_model = config.get('Metagenome', 'primmer_list')
+                    primmer_list = pri_model.split(',')
                 except:
                     QMessageBox.warning(self.centralwidget, '警告', '配置文件中模型列表参数有误！', QMessageBox.Ok)
                 else:
-                    child_ui = Xinguan_Ui(model_list)
+                    child_ui = Xinguan_Ui(model_list, primmer_list)
             else:
                 child_ui = Xlpj_UI()
         elif current_tree == '序列拼接(基于参考序列)':
