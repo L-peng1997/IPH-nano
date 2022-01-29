@@ -3153,3 +3153,8 @@ SystemExit: None
 2022-01-23 07:26:56.177 | INFO     | G_COMM.runPythonFile:xinguan_xlfx:276 - 命令如下：python D:/工作项目/IPH-nano/二代/G_CONFIG/ncov_analyze.py -fasta_file 1 -result_path 2
 2022-01-23 07:28:48.482 | INFO     | G_COMM.runPythonFile:__init__:25 - 程序运行参数为：{'task_type': '新冠病毒illumina测序数据分析-新冠病毒序列分析', 'task_name': '1642894124785', 'sample_list': '', 'barcode_list': '', 'result_path': '2', 'xvlie_file': '1'}
 2022-01-23 07:28:52.397 | INFO     | G_COMM.runPythonFile:xinguan_xlfx:276 - 命令如下：python D:/工作项目/IPH-nano/二代/G_CONFIG/ncov_analyze.py -fasta_file 1 -result_path 2
+2022-01-29 11:45:12.437 | INFO     | G_COMM.runPythonFile:__init__:25 - 程序运行参数为：{'task_type': '未知病原illumina测序数据分析-从头拼接', 'task_name': '1', 'sample_list': '', 'barcode_list': '', 'result_path': '3', 'ori_path': '1', 'list_path': '2', 'threads': '16', 'meta': False, 'cexv_type': 'SE'}
+2022-01-29 11:46:24.043 | INFO     | G_COMM.runPythonFile:cexv_ctpj:130 - 命令如下：python D:/工作项目/IPH-nano/二代/G_CONFIG/erdai/ngs_denove.py -raw_path 1 -list_file 2 -result_path 3 -type SE -threads 16 
+2022-01-29 11:46:24.313 | ERROR    | G_COMM.runPythonFile:cexv_ctpj:155 - 1 执行失败！：python: can't open file '<unprintable file name>': [Errno 2] No such file or directory
+
+2022-01-29 12:00:51.564 | INFO     | G_COMM.runPythonFile:__init__:25 - 程序运行参数为：{'task_type': '未知病原illumina测序数据分析-从头拼接', 'task_name': '1', 'sample_list': '', 'barcode_list': '', 'result_path': '3', 'ori_path': '1', 'list_path': '2', 'threads': '16', 'meta': False, 'cexv_type': 'SE'}
