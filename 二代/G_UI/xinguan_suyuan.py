@@ -162,7 +162,7 @@ class Ui_Dialog(QWidget):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.database_lb.sizePolicy().hasHeightForWidth())
         self.database_lb.setSizePolicy(sizePolicy)
-        self.database_lb.setMinimumSize(QtCore.QSize(100, 0))
+        self.database_lb.setMinimumSize(QtCore.QSize(113, 0))
         self.database_lb.setObjectName("model_lb")
         self.database_lb.setFont(font)
         self.database_lb.setAlignment(QtCore.Qt.AlignRight | QtCore.Qt.AlignTrailing | QtCore.Qt.AlignVCenter)
