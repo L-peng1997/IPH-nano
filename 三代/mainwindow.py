@@ -1244,14 +1244,14 @@ class Ui_MainWindow(QObject):
 
     @pyqtSlot()
     def on_helpbtn_clicked(self):
-        content = """Email: Jimlu0331@163.com"""
+        content = """Current version: 1.12  """
         messageBox = QMessageBox()
         messageBox.setWindowIcon(QIcon(f'{base_path}/img/logo.png'))
         messageBox.setWindowTitle('高通量测序')
         messageBox.setText(content)
         messageBox.setStandardButtons(QMessageBox.Yes)
         buttonY = messageBox.button(QMessageBox.Yes)
-        buttonY.setText('知道了')
+        buttonY.setText('Ok')
         messageBox.exec_()
 
 
