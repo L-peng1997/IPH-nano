@@ -257,14 +257,14 @@ class RunPythonFile(QObject):
             self.conn.commit()
             self.exitSignal.emit(self.status)
 
-            # thi_res = subprocess.run(file_comm, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
-            #                          universal_newlines=True, shell=True)
-            # if thi_res.returncode == 0:
-            #     logger.info('执行成功')
-            #     logger.info(thi_res.stdout)
-            # else:
-            #     self.status = '执行失败！'
-            #     logger.error(f'执行出错：{thi_res.stdout}')
+            thi_res = subprocess.run(file_comm, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+                                     universal_newlines=True, shell=True)
+            if thi_res.returncode == 0:
+                logger.info('执行成功')
+                logger.info(thi_res.stdout)
+            else:
+                self.status = '执行失败！'
+                logger.error(f'执行出错：{thi_res.stdout}')
         except subprocess.CalledProcessError as e:
             self.status = '执行失败！'
             # self.result = self.status + '：' + str(e.stderr)
