@@ -47,6 +47,8 @@ class RunPythonFile(QObject):
         self.xvlie_file = data.get('xvlie_file')
         # 序列信息
         self.xvlie_info = data.get('xvlie_info')
+        # 新冠数据库
+        self.database = data.get('database')
 
         """宏基因组特有参数"""
         # 模型文件
@@ -165,7 +167,7 @@ class RunPythonFile(QObject):
         """
         try:
             file_comm = f'python {exepath}/G_CONFIG/ncov_trace_tree.py -fasta_file {self.xvlie_file} -meta_file {self.xvlie_info} -result_path ' \
-                        f'{self.result_path} -num_seqs {self.count} '
+                        f'{self.result_path} -num_seqs {self.count} -db {self.database}'
             logger.info(f'命令如下：{file_comm}')
             u_sql = 'update task set taskStatus=? where taskNm=? and taskType=?'
             # 将当前任务状态更新到数据库中，以便页面展示

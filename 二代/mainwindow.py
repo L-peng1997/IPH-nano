@@ -426,7 +426,9 @@ class Ui_MainWindow(QObject):
         elif current_tree == '从头拼接':
             child_ui = EDctpj_UI()
         elif current_tree == '溯源与分子进化树':
-            child_ui = Suyuan_UI()
+            con_model = config.get('SARS2_analyze', 'database_list')
+            data_list = con_model.split(',')
+            child_ui = Suyuan_UI(data_list)
         elif current_tree == '新冠病毒序列拼接':
             child_ui = Xlpj_UI()
         elif current_tree == '新冠病毒序列分析':
@@ -1103,14 +1105,14 @@ class Ui_MainWindow(QObject):
 
     @pyqtSlot()
     def on_helpbtn_clicked(self):
-        content = """Email: Jimlu0331@163.com"""
+        content = """Current version: 1.12  """
         messageBox = QMessageBox()
         messageBox.setWindowIcon(QIcon(f'{base_path}/img/logo.png'))
         messageBox.setWindowTitle('高通量测序')
         messageBox.setText(content)
         messageBox.setStandardButtons(QMessageBox.Yes)
         buttonY = messageBox.button(QMessageBox.Yes)
-        buttonY.setText('知道了')
+        buttonY.setText('Ok')
         messageBox.exec_()
 
 

@@ -60,6 +60,8 @@ class RunPythonFile(QObject):
             self.result_path = data.get('result_path')
             # 每样品序列数
             self.count = data.get('count')
+            # 新冠数据库
+            self.database = data.get('database')
 
 
         # 程序状态
@@ -246,7 +248,7 @@ class RunPythonFile(QObject):
         """
         try:
             file_comm = f'python {exepath}/G_CONFIG/ncov_trace_tree.py -fasta_file {self.xvlie_file} -meta_file {self.xvlie_info} -result_path ' \
-                        f'{self.result_path} -num_seqs {self.count} '
+                        f'{self.result_path} -num_seqs {self.count} -db {self.database}'
             logger.info(f'命令如下：{file_comm}')
             u_sql = 'update task set taskStatus=? where taskNm=? and taskType=?'
             # 将当前任务状态更新到数据库中，以便页面展示
