@@ -2967,3 +2967,7 @@ from disconnected: received Inspector.detached event
 2021-12-25 15:31:12.913 | INFO     | G_COMM.runPythonFile:xinguan_suyuan:256 - 命令如下：python D:/工作项目/IPH-nano/三代/G_CONFIG/ncov_trace_tree.py -fasta_file 1 -meta_file 2 -result_path 3 -num_seqs 4 
 2021-12-25 15:31:13.181 | ERROR    | G_COMM.runPythonFile:xinguan_suyuan:281 - 1 执行失败！：python: can't open file '<unprintable file name>': [Errno 2] No such file or directory
 
+2022-01-29 12:49:04.736 | INFO     | G_COMM.runPythonFile:__init__:25 - 程序运行参数为：{'task_type': 'Nanopore新冠病毒-序列拼接', 'task_name': '起始路径', 'sample_list': '', 'barcode_list': '', 'result_path': '结果路径', 'ori_path': '起始路径', 'list_path': '列表文件', 'model_name': 'test1', 'primmer': '这是个例子1'}
+2022-01-29 12:49:04.769 | INFO     | G_COMM.runPythonFile:xinguan_xlpj:212 - 命令如下：python D:/工作项目/IPH-nano/三代/G_CONFIG/ncov_assemble.py -raw_path 起始路径 -list_file 列表文件 -result_path 结果路径 -model test1 -primmer_version 这是个例子1
+2022-02-15 13:23:38.453 | INFO     | G_COMM.runPythonFile:__init__:25 - 程序运行参数为：{'task_type': 'Nanopore新冠病毒-溯源与分子进化树', 'task_name': '1', 'sample_list': '', 'barcode_list': '', 'result_path': '3', 'database': '这是个例子1', 'xvlie_file': '1', 'xvlie_info': '2', 'count': '4'}
+2022-02-15 13:23:38.484 | INFO     | G_COMM.runPythonFile:xinguan_suyuan:252 - 命令如下：python D:/工作项目/IPH-nano/三代/G_CONFIG/ncov_trace_tree.py -fasta_file 1 -meta_file 2 -result_path 3 -num_seqs 4 -db 这是个例子1

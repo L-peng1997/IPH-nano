@@ -420,7 +420,9 @@ class Ui_MainWindow(QObject):
         if current_tree in ['Nanopore流感病毒拼接']:
             child_ui = Liugan_UI()
         elif current_tree == '溯源与分子进化树':
-            child_ui = Xvlie_UI()
+            con_model = config.get('SARS2_analyze', 'database_list')
+            data_list = con_model.split(',')
+            child_ui = Xvlie_UI(data_list)
         elif current_tree == '序列提取':
             child_ui = Xvlietiqu_UI()
         elif current_tree in ['查找参考序列']:
