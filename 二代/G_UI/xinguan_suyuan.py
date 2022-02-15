@@ -13,6 +13,12 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import pyqtSignal, QRegExp
 from PyQt5.QtWidgets import QWidget, QMessageBox, QFileDialog, QApplication, QDialog
 import os
+from configparser import ConfigParser
+
+
+exepath = os.getcwd().replace('\\', '/')
+config = ConfigParser()
+config.read(f'{exepath}/G_CONFIG/config.ini'.replace('/G_UI', ''), encoding='utf-8')
 
 
 class Ui_Dialog(QWidget):
@@ -20,6 +26,10 @@ class Ui_Dialog(QWidget):
     paramSignal = pyqtSignal(dict)
     startSignal = pyqtSignal(int)
     signal = 0
+
+    def __init__(self, data_list):
+        super(Ui_Dialog, self).__init__()
+        self.data_list = data_list
 
     def setupUi(self, Dialog):
         self.Dialog = Dialog
@@ -143,8 +153,37 @@ class Ui_Dialog(QWidget):
         self.horizontalLayout_4.addItem(spacerItem)
         self.verticalLayout.addLayout(self.horizontalLayout_4)
 
+        # 新冠数据库
         self.horizontalLayout_5 = QtWidgets.QHBoxLayout()
-        self.horizontalLayout_5.setObjectName("horizontalLayout_5")
+        self.horizontalLayout_5.setObjectName("horizontalLayout_4")
+        self.database_lb = QtWidgets.QLabel(self.widget)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Preferred)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.database_lb.sizePolicy().hasHeightForWidth())
+        self.database_lb.setSizePolicy(sizePolicy)
+        self.database_lb.setMinimumSize(QtCore.QSize(100, 0))
+        self.database_lb.setObjectName("model_lb")
+        self.database_lb.setFont(font)
+        self.database_lb.setAlignment(QtCore.Qt.AlignRight | QtCore.Qt.AlignTrailing | QtCore.Qt.AlignVCenter)
+        self.horizontalLayout_5.addWidget(self.database_lb)
+        self.database_box = QtWidgets.QComboBox(self.widget)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.database_box.sizePolicy().hasHeightForWidth())
+        self.database_box.setSizePolicy(sizePolicy)
+        self.database_box.setObjectName("database_box")
+        self.database_box.setFont(font_le)
+        self.database_box.addItems(self.data_list)
+        self.database_box.setMinimumSize(QtCore.QSize(0, 30))
+        self.horizontalLayout_5.addWidget(self.database_box)
+        spacerItem = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        self.horizontalLayout_5.addItem(spacerItem)
+        self.verticalLayout.addLayout(self.horizontalLayout_5)
+
+        self.horizontalLayout_6 = QtWidgets.QHBoxLayout()
+        self.horizontalLayout_6.setObjectName("horizontalLayout_5")
         self.run_btn = QtWidgets.QPushButton(self.widget)
         self.run_btn.setMaximumSize(QtCore.QSize(100, 30))
         self.run_btn.setObjectName("run_btn")
@@ -156,7 +195,7 @@ class Ui_Dialog(QWidget):
                                    "QPushButton:hover{                    \n"
                                    "    background:#99CC99;\n"
                                    "}\n")
-        self.horizontalLayout_5.addWidget(self.run_btn)
+        self.horizontalLayout_6.addWidget(self.run_btn)
         self.cancel_btn = QtWidgets.QPushButton(self.widget)
         self.cancel_btn.setMaximumSize(QtCore.QSize(100, 30))
         self.cancel_btn.setObjectName("cancel_btn")
@@ -168,8 +207,8 @@ class Ui_Dialog(QWidget):
                                       "QPushButton:hover{                    \n"
                                       "    background:#FF6666;\n"
                                       "}\n")
-        self.horizontalLayout_5.addWidget(self.cancel_btn)
-        self.verticalLayout.addLayout(self.horizontalLayout_5)
+        self.horizontalLayout_6.addWidget(self.cancel_btn)
+        self.verticalLayout.addLayout(self.horizontalLayout_6)
 
         self.retranslateUi(Dialog)
         QtCore.QMetaObject.connectSlotsByName(Dialog)
@@ -192,6 +231,7 @@ class Ui_Dialog(QWidget):
         self.result_label.setText(_translate("Dialog", "结果路径："))
         self.result_tbtn.setText(_translate("Dialog", "..."))
         self.count_LB.setText(_translate("Dialog", "每样品序列数："))
+        self.database_lb.setText(_translate("Dialog", "新冠数据库："))
         self.run_btn.setText(_translate("Dialog", "运行"))
         self.cancel_btn.setText(_translate("Dialog", "取消"))
 
@@ -227,6 +267,8 @@ class Ui_Dialog(QWidget):
         result_path = self.result_LE.text()
         # 每样品序列数
         count = self.count_LE.text()
+        # 新冠数据库
+        database = self.database_box.currentText()
 
         if not xvlie_file or not xvlie_info or not count or not result_path:
             QMessageBox.warning(self, '警告', '参数不能为空！', QMessageBox.Ok)
@@ -243,7 +285,7 @@ class Ui_Dialog(QWidget):
                 'sample_list': '',
                 'barcode_list': '',
                 'result_path': result_path,
-
+                'database': database,
                 'xvlie_file': xvlie_file,
                 'xvlie_info': xvlie_info,
                 'count': count
@@ -262,10 +304,13 @@ class Ui_Dialog(QWidget):
 
 
 if __name__ == '__main__':
+    con_model = config.get('SARS2_analyze', 'database_list')
+    data_list = con_model.split(',')
+
     app = QApplication(sys.argv)
     # 实例化主窗口
     main = QDialog()
-    main_ui = Ui_Dialog()
+    main_ui = Ui_Dialog(data_list)
     main_ui.setupUi(main)
     # 显示
     main.show()
