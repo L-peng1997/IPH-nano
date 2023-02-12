@@ -269,6 +269,42 @@ class RunPythonFile(QObject):
             logger.error(f'{self.task_name} {self.status}：{e.stderr}')
             quit()
 
+    def xinguan_wsfx(self):
+        """
+        新冠-新冠病毒序列分析
+        :param sample: 样品名称
+        :return:
+        """
+        try:
+            file_comm = f'python {exepath}/G_CONFIG/edai/ncov_sewage.py -rawdata {self.xvlie_file} -result  {self.result_path}'
+            logger.info(f'命令如下：{file_comm}')
+            u_sql = 'update task set taskStatus=? where taskNm=? and taskType=?'
+            # 将当前任务状态更新到数据库中，以便页面展示
+            self.status = '正在运行'
+            self.cursor.execute(u_sql, (self.status, self.task_name, self.task_type))
+            self.conn.commit()
+            self.exitSignal.emit(self.status)
+
+            thi_res = subprocess.run(file_comm, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+                                     universal_newlines=True, shell=True)
+            if thi_res.returncode == 0:
+                logger.info('执行成功')
+                logger.info(thi_res.stdout)
+            else:
+                self.status = '执行失败！'
+                logger.error(f'执行出错：{thi_res.stdout}')
+        except subprocess.CalledProcessError as e:
+            self.status = '执行失败！'
+            # self.result = self.status + '：' + str(e.stderr)
+            self.result = self.status + f'错误详情可查看：{exepath}/logs/task.log'
+            self.exitSignal.emit(self.result)
+            u_sql = """update task set taskStatus=?, endTime=?, taskResult=? where taskNm=? and taskType=?"""
+            end_time = str(datetime.now()).split('.')[0]
+            self.cursor.execute(u_sql, (self.status, end_time, self.result, self.task_name, self.task_type))
+            self.conn.commit()
+            logger.error(f'{self.task_name} {self.status}：{e.stderr}')
+            quit()
+
     def insert_db(self):
         # 运行前将任务参数存储到数据库中
         try:
@@ -313,6 +349,8 @@ class RunPythonFile(QObject):
             self.xinguan_xlpj()
         elif '新冠病毒序列分析' in self.task_type:
             self.xinguan_xlfx()
+        elif '新冠病毒污水分析' in self.task_type:
+            self.xinguan_wsfx()
         else:
             self.status = f'暂不支持该功能：{self.task_type}'
 
