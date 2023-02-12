@@ -39,6 +39,8 @@ from G_UI.xinguan_xlfx import Ui_Dialog as Xlfx_UI
 # 2021-12-05 19:47:47 添加界面
 from G_UI.weizhi_xlfl import Ui_Dialog as WZxlfl_UI
 from G_UI.erdai_ctpj import Ui_Dialog as EDctpj_UI
+# 2023-02-12 14:12:32 添加“新冠病毒污水分析”界面
+from G_UI.xinguan_wsfx import Ui_Dialog as Wsfx_UI
 from createDB import build_db
 from drawZhex import QtDraw
 from webShow import WebShow
@@ -212,7 +214,7 @@ class Ui_MainWindow(QObject):
         font1 = QtGui.QFont()
         font1.setPointSize(11)
         child_icon = qtawesome.icon('fa.arrow-right', color='black')
-        for _ in range(3):
+        for _ in range(4):
             item_1 = QtWidgets.QTreeWidgetItem(item_0)
             item_1.setFont(0, font1)
             item_1.setIcon(0, child_icon)
@@ -359,6 +361,7 @@ class Ui_MainWindow(QObject):
         self.typeTree.topLevelItem(0).child(0).setText(0, self._translate("MainWindow", "新冠病毒序列拼接"))
         self.typeTree.topLevelItem(0).child(1).setText(0, self._translate("MainWindow", "新冠病毒序列分析"))
         self.typeTree.topLevelItem(0).child(2).setText(0, self._translate("MainWindow", "溯源与分子进化树"))
+        self.typeTree.topLevelItem(0).child(3).setText(0, self._translate("MainWindow", "新冠病毒污水分析"))
         self.typeTree.topLevelItem(1).setText(0, self._translate("MainWindow", "illumina高通量测序"))
         self.typeTree.topLevelItem(1).child(0).setText(0, self._translate("MainWindow", "数据质控"))
         self.typeTree.topLevelItem(1).child(1).setText(0, self._translate("MainWindow", "序列拼接(基于参考序列)"))
@@ -433,6 +436,8 @@ class Ui_MainWindow(QObject):
             child_ui = Xlpj_UI()
         elif current_tree == '新冠病毒序列分析':
             child_ui = Xlfx_UI()
+        elif current_tree == '新冠病毒污水分析':
+            child_ui = Wsfx_UI()
         else:
             QMessageBox.warning(self.centralwidget, '警告', '请选择具体的功能节点', QMessageBox.Ok)
         if child_ui:
@@ -472,7 +477,7 @@ class Ui_MainWindow(QObject):
         if signal == 1:
             # print(f'开始运行程序，参数为{data}')
             # 需要调用python文件的节点
-            pyfile_list = ['序列分类', '从头拼接', '溯源与分子进化树', '新冠病毒序列拼接', '新冠病毒序列分析']
+            pyfile_list = ['序列分类', '从头拼接', '溯源与分子进化树', '新冠病毒序列拼接', '新冠病毒序列分析', '新冠病毒污水分析']
             # 运行程序
             if self.typeTree.currentItem().text(0) == '诺如病毒illumina数据分析':
                 file_name = config.get('Norovirus', 'file_name')
