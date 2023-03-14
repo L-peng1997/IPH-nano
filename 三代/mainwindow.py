@@ -733,7 +733,7 @@ class Ui_MainWindow(QObject):
         i_sql = """insert into params(taskNm, taskType, sampleNm, barcode, filepath)values (?,?,?,?,?)"""
         self.cursor.execute(i_sql,
                             (data['task_name'], data['task_type'], ','.join(data['sample_list']), ','.join(data['barcode_list']),
-                             data['work_file']))
+                             data['result_path']))
         self.conn.commit()
 
     def do_hongjiyin(self, data):
@@ -912,10 +912,11 @@ class Ui_MainWindow(QObject):
             s_sql = f"select sampleNm, barcode from params where taskNm='{task_name}' and taskType like '{tType}%'"
             result = self.cursor.execute(s_sql)
             data = result.fetchone() if result else ('', '')
-            sample_list = data[0]
-            barcode_list = data[1]
-            his_data = his_data + (sample_list, barcode_list)
-            history_task_list.append(his_data)
+            if data:
+                sample_list = data[0]
+                barcode_list = data[1]
+                his_data = his_data + (sample_list, barcode_list)
+                history_task_list.append(his_data)
 
         return new_task_list, history_task_list
 
@@ -1195,13 +1196,13 @@ class Ui_MainWindow(QObject):
         timeDisplay = time.toString('yyyy-MM-dd hh:mm:ss')
         delta = self.get_period(self.start_time, timeDisplay)
         row_num = self.tableWidget.rowCount()
-        if row_num == 1:
-            table_item = QtWidgets.QTableWidgetItem()
-            self.tableWidget.setItem(0, 3, table_item)
-            table_item = self.tableWidget.item(0, 3)
-            table_item.setText(self._translate("MainWindow", delta))
-            table_item.setTextAlignment(Qt.AlignHCenter)
-            return delta
+        # if row_num == 1:
+        table_item = QtWidgets.QTableWidgetItem()
+        self.tableWidget.setItem(row_num-1, 3, table_item)
+        table_item = self.tableWidget.item(row_num-1, 3)
+        table_item.setText(self._translate("MainWindow", delta))
+        table_item.setTextAlignment(Qt.AlignHCenter)
+        return delta
 
     def get_period(self, s_time, e_time):
         """

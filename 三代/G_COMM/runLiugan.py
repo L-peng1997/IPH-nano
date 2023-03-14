@@ -35,28 +35,13 @@ class RunLiugan(QObject):
         # parmas = [task_type, task_name, self.sample_list, self.barcode_list, file_path]
         logger.info(f'程序运行参数为：{data}')
         self.task_name = data['task_name']
-        # 起始文件所在路径
-        # self.ori_name = config.get('Flu_Virus', 'ori_name')
-        self.path = data['fastq_file']
-        # 样品名称
-        self.sample_name = data['task_name']
 
-        # self.sample_list = data['sample_list']
-        # self.barcode_list = data['barcode_list']
-
-        # 获取结果文件存放路径以及数据库路径
-        try:
-            self.work_file = data['work_file']
-            self.work_file = self.work_file + '/' + self.task_name
-            print(self.work_file)
-            if not os.path.exists(self.work_file):
-                os.mkdir(self.work_file)
-            else:
-                shutil.rmtree(self.work_file)
-                os.mkdir(self.work_file)
-            self.db_path = config.get('Flu_Virus', 'db_path')
-        except Exception as e:
-            logger.error(f'读取配置文件失败，{str(e)}')
+        # 起始路径
+        self.ori_path = data['ori_path']
+        # 结果路径
+        self.result_path = data['result_path']
+        # 列表文件
+        self.sample_file = data['sample_file']
 
         # 程序状态
         self.status = '正在运行'
@@ -80,55 +65,13 @@ class RunLiugan(QObject):
         result = path_com.stdout.read()
         logger.info(f'当前环境变量为{result}')
 
-    def merge_file(self, sample, barcode):
+    def liugan(self):
         """
-        合并barcode文件夹下的所有文件
-        :param sample: 样品名称
-        :param barcode: barcode文件夹
-        :return:
-        """
-        if not os.path.exists(self.work_file + "/" + self.fastq_name):
-            os.mkdir(self.work_file + "/" + self.fastq_name)
-        try:
-            cat_comm = f'cat {self.path}/{barcode}/*.fastq > {self.work_file + "/" + self.fastq_name}/{sample}.fastq'
-            logger.info(f'合并文件的命令如下：{cat_comm}')
-            u_sql = 'update task set taskStatus=? where taskNm=?  and taskType=?'
-            # 将当前任务状态更新到数据库中，以便页面展示
-            self.status = '正在合并文件'
-            self.cursor.execute(u_sql, (self.status, self.task_name, self.task_type))
-            self.conn.commit()
-            self.exitSignal.emit(self.status)
-            # time.sleep(10)
-
-            cat_res = subprocess.run(cat_comm, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
-                                     universal_newlines=True, shell=True)
-            if cat_res.returncode == 0:
-                logger.info('合并文件 执行成功')
-                logger.info(cat_res.stdout)
-            else:
-                self.status = '执行失败！'
-                logger.error(f'合并文件 执行出错：{cat_res.stdout}')
-        except subprocess.CalledProcessError as e:
-            self.status = '合并文件 执行失败！'
-            self.result = self.status + '：' + str(e.stderr)
-            self.exitSignal.emit(self.result)
-            u_sql = """update task set taskStatus=?, endTime=?, taskResult=? where taskNm=?  and taskType=?"""
-            end_time = str(datetime.now()).split('.')[0]
-            self.cursor.execute(u_sql, (self.status, end_time, self.result, self.task_name, self.task_type))
-            self.conn.commit()
-            logger.error(f'{self.task_name} {self.status}：{e.stderr}')
-            quit()
-
-    def secnod_comm(self):
-        """
-        执行python文件中的命令
-        :param sample: 样品名称
-        :return:
+        2023-03-14 23:42:10 流感调整
         """
         try:
-            # sec_comm = f'python {exepath}/G_CONFIG/Flu_Virus/ont_flu_8segments_assemble.py -d {self.work_file + "/" + self.fastq_name} -o {self.work_file} -db {self.db_path} -s {sample}'
-            sec_comm = f'python {exepath}/G_CONFIG/Flu_Virus/ont_flu_8segments_assemble.py -d {self.path} -o {self.work_file} -db {self.db_path} -s {self.sample_name}'
-            logger.info(f'命令如下：{sec_comm}')
+            file_comm = f'python {exepath}/G_CONFIG/Flu_Virus/Flu_assemble.py -rawdata  {self.ori_path} -samplelist  {self.sample_file} -result  {self.result_path}'
+            logger.info(f'命令如下：{file_comm}')
             u_sql = 'update task set taskStatus=? where taskNm=? and taskType=?'
             # 将当前任务状态更新到数据库中，以便页面展示
             self.status = '正在运行'
@@ -136,14 +79,14 @@ class RunLiugan(QObject):
             self.conn.commit()
             self.exitSignal.emit(self.status)
 
-            sec_res = subprocess.run(sec_comm, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+            thi_res = subprocess.run(file_comm, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
                                      universal_newlines=True, shell=True)
-            if sec_res.returncode == 0:
+            if thi_res.returncode == 0:
                 logger.info('执行成功')
-                logger.info(sec_res.stdout)
+                logger.info(thi_res.stdout)
             else:
                 self.status = '执行失败！'
-                logger.error(f'执行出错：{sec_res.stdout}')
+                logger.error(f'执行出错：{thi_res.stdout}')
         except subprocess.CalledProcessError as e:
             self.status = '执行失败！'
             # self.result = self.status + '：' + str(e.stderr)
@@ -190,13 +133,9 @@ class RunLiugan(QObject):
         """
         # self.get_path()
         self.insert_db()
-        flag = 0
-        if os.path.exists(self.path):
-            self.secnod_comm()
-        else:
-            flag = 1
+        self.liugan()
         # self.status = '已完成' if flag == 0 else f'运行结束，但{"，".join(empty_bar)} 文件夹为空！'
-        self.status = '已完成' if flag == 0 else f'运行结束，但{self.path} 文件不存在！'
+        self.status = '已完成'
         self.exitSignal.emit(self.status)
         # # 程序运行结束后，更新数据库中任务信息
         u_sql = """update task set taskStatus=?, endTime=?, taskResult=? where taskNm=? and taskType=?"""
