@@ -246,6 +246,10 @@ class Ui_MainWindow(QObject):
             else:
                 item_1.setIcon(0, child_icon)
 
+        # 流感病毒序列拼接
+        item_0 = QtWidgets.QTreeWidgetItem(self.typeTree)
+        item_0.setIcon(0, QIcon(f'{base_path}/img/liugan.png'))
+
 
         self.typeTree.setFrameStyle(0)
         self.typeTree.setStyleSheet('''
@@ -370,6 +374,7 @@ class Ui_MainWindow(QObject):
         self.typeTree.topLevelItem(3).child(0).setText(0, self._translate("MainWindow", "序列分类"))
         self.typeTree.topLevelItem(3).child(1).setText(0, self._translate("MainWindow", "可视化分析"))
         self.typeTree.topLevelItem(3).child(2).setText(0, self._translate("MainWindow", "从头拼接"))
+        self.typeTree.topLevelItem(4).setText(0, self._translate("MainWindow", "流感病毒序列拼接"))
         self.typeTree.setSortingEnabled(__sortingEnabled)
         self.typeTree.itemClicked.connect(self.tree_click)
         self.typeTree.itemClicked.connect(self.refresh_table)
@@ -436,7 +441,8 @@ class Ui_MainWindow(QObject):
             child_ui = Xlpj_UI()
         elif current_tree == '新冠病毒序列分析':
             child_ui = Xlfx_UI()
-        elif current_tree == '新冠病毒污水分析':
+        # 2023-04-07 22:45:51 添加“流感病毒序列拼接”界面
+        elif current_tree in ['新冠病毒污水分析', '流感病毒序列拼接']:
             child_ui = Wsfx_UI()
         else:
             QMessageBox.warning(self.centralwidget, '警告', '请选择具体的功能节点', QMessageBox.Ok)
@@ -477,7 +483,7 @@ class Ui_MainWindow(QObject):
         if signal == 1:
             # print(f'开始运行程序，参数为{data}')
             # 需要调用python文件的节点
-            pyfile_list = ['序列分类', '从头拼接', '溯源与分子进化树', '新冠病毒序列拼接', '新冠病毒序列分析', '新冠病毒污水分析']
+            pyfile_list = ['序列分类', '从头拼接', '溯源与分子进化树', '新冠病毒序列拼接', '新冠病毒序列分析', '新冠病毒污水分析', '流感病毒序列拼接']
             # 运行程序
             if self.typeTree.currentItem().text(0) == '诺如病毒illumina数据分析':
                 file_name = config.get('Norovirus', 'file_name')
