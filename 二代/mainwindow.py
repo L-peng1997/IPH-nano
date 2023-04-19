@@ -41,6 +41,7 @@ from G_UI.weizhi_xlfl import Ui_Dialog as WZxlfl_UI
 from G_UI.erdai_ctpj import Ui_Dialog as EDctpj_UI
 # 2023-02-12 14:12:32 添加“新冠病毒污水分析”界面
 from G_UI.xinguan_wsfx import Ui_Dialog as Wsfx_UI
+from G_UI.liugan_xlpj import Ui_Dialog as LGxlpj_UI
 from createDB import build_db
 from drawZhex import QtDraw
 from webShow import WebShow
@@ -442,8 +443,12 @@ class Ui_MainWindow(QObject):
         elif current_tree == '新冠病毒序列分析':
             child_ui = Xlfx_UI()
         # 2023-04-07 22:45:51 添加“流感病毒序列拼接”界面
-        elif current_tree in ['新冠病毒污水分析', '流感病毒序列拼接']:
-            child_ui = Wsfx_UI()
+        elif current_tree in ['新冠病毒污水分析']:
+            con_model = config.get('SARS2_analyze', 'primer_list')
+            yw_list = con_model.split(',')
+            child_ui = Wsfx_UI(yw_list)
+        elif current_tree == '流感病毒序列拼接':
+            child_ui = LGxlpj_UI()
         else:
             QMessageBox.warning(self.centralwidget, '警告', '请选择具体的功能节点', QMessageBox.Ok)
         if child_ui:
@@ -1116,7 +1121,7 @@ class Ui_MainWindow(QObject):
 
     @pyqtSlot()
     def on_helpbtn_clicked(self):
-        content = """Current version: 1.12  """
+        content = """Current version: 1.31  """
         messageBox = QMessageBox()
         messageBox.setWindowIcon(QIcon(f'{base_path}/img/logo.png'))
         messageBox.setWindowTitle('高通量测序')

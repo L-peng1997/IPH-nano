@@ -42,6 +42,9 @@ class RunPythonFile(QObject):
         # 线程数
         self.thread_ = data.get('threads')
 
+        """新冠病毒污水分析"""
+        self.yw_data = data.get('yw_data')
+
         """溯源与分子进化树"""
         # 序列文件
         self.xvlie_file = data.get('xvlie_file')
@@ -276,7 +279,7 @@ class RunPythonFile(QObject):
         :return:
         """
         try:
-            file_comm = f'python {exepath}/G_CONFIG/erdai/ncov_sewage.py -rawdata {self.xvlie_file} -result  {self.result_path}'
+            file_comm = f'python {exepath}/G_CONFIG/erdai/ncov_sewage.py -rawdata {self.ori_path} -result  {self.result_path} -primer {self.yw_data}'
             logger.info(f'命令如下：{file_comm}')
             u_sql = 'update task set taskStatus=? where taskNm=? and taskType=?'
             # 将当前任务状态更新到数据库中，以便页面展示
@@ -285,14 +288,14 @@ class RunPythonFile(QObject):
             self.conn.commit()
             self.exitSignal.emit(self.status)
 
-            thi_res = subprocess.run(file_comm, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
-                                     universal_newlines=True, shell=True)
-            if thi_res.returncode == 0:
-                logger.info('执行成功')
-                logger.info(thi_res.stdout)
-            else:
-                self.status = '执行失败！'
-                logger.error(f'执行出错：{thi_res.stdout}')
+            # thi_res = subprocess.run(file_comm, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+            #                          universal_newlines=True, shell=True)
+            # if thi_res.returncode == 0:
+            #     logger.info('执行成功')
+            #     logger.info(thi_res.stdout)
+            # else:
+            #     self.status = '执行失败！'
+            #     logger.error(f'执行出错：{thi_res.stdout}')
         except subprocess.CalledProcessError as e:
             self.status = '执行失败！'
             # self.result = self.status + '：' + str(e.stderr)
@@ -321,14 +324,14 @@ class RunPythonFile(QObject):
             self.conn.commit()
             self.exitSignal.emit(self.status)
 
-            thi_res = subprocess.run(file_comm, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
-                                     universal_newlines=True, shell=True)
-            if thi_res.returncode == 0:
-                logger.info('执行成功')
-                logger.info(thi_res.stdout)
-            else:
-                self.status = '执行失败！'
-                logger.error(f'执行出错：{thi_res.stdout}')
+            # thi_res = subprocess.run(file_comm, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+            #                          universal_newlines=True, shell=True)
+            # if thi_res.returncode == 0:
+            #     logger.info('执行成功')
+            #     logger.info(thi_res.stdout)
+            # else:
+            #     self.status = '执行失败！'
+            #     logger.error(f'执行出错：{thi_res.stdout}')
         except subprocess.CalledProcessError as e:
             self.status = '执行失败！'
             # self.result = self.status + '：' + str(e.stderr)
