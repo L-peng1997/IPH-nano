@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'xinguan_xlfx.ui'
+# Form implementation generated from reading ui file '新冠污水.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.4
 #
@@ -15,9 +15,16 @@ from PyQt5.QtCore import pyqtSignal, QRegExp
 from PyQt5.QtWidgets import QWidget, QMessageBox, QFileDialog, QApplication, QDialog
 from PyQt5.QtGui import QRegExpValidator, QIntValidator
 import os
+from configparser import ConfigParser
 
 
 # 新冠病毒污水分析
+
+
+exepath = os.getcwd().replace('\\', '/')
+config = ConfigParser()
+config.read(f'{exepath}/G_CONFIG/config.ini'.replace('/G_UI', ''), encoding='utf-8')
+
 
 class Ui_Dialog(QWidget):
 
@@ -25,10 +32,17 @@ class Ui_Dialog(QWidget):
     startSignal = pyqtSignal(int)
     signal = 0
 
+    def __init__(self, yw_list):
+        super(Ui_Dialog, self).__init__()
+        self.yw_list = yw_list
+
     def setupUi(self, Dialog):
         self.Dialog = Dialog
         Dialog.setObjectName("Dialog")
-        Dialog.resize(831, 344)
+        # Dialog.resize(830, 410)
+        Dialog.setFixedSize(830, 400)
+        # Dialog.setLayoutDirection(QtCore.Qt.LeftToRight)
+        self.widget = QtWidgets.QWidget(Dialog)
 
         # 设置标签字体
         font = QtGui.QFont()
@@ -42,61 +56,95 @@ class Ui_Dialog(QWidget):
         font_le.setBold(True)
         font_le.setWeight(75)
 
-        self.widget = QtWidgets.QWidget(Dialog)
-        self.widget.setGeometry(QtCore.QRect(14, -10, 781, 331))
+        self.widget.setGeometry(QtCore.QRect(70, 40, 720, 300))
         self.widget.setObjectName("widget")
         self.verticalLayout = QtWidgets.QVBoxLayout(self.widget)
         self.verticalLayout.setContentsMargins(0, 0, 0, 0)
         self.verticalLayout.setObjectName("verticalLayout")
-        # 序列文件
+
+        # 起始路径
         self.horizontalLayout = QtWidgets.QHBoxLayout()
         self.horizontalLayout.setObjectName("horizontalLayout")
-        self.xvlie_label = QtWidgets.QLabel(self.widget)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Preferred)
+        self.ori_LB = QtWidgets.QLabel(self.widget)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.xvlie_label.sizePolicy().hasHeightForWidth())
-        self.xvlie_label.setSizePolicy(sizePolicy)
-        self.xvlie_label.setMinimumSize(QtCore.QSize(100, 0))
-        self.xvlie_label.setObjectName("xvlie_label")
-        self.xvlie_label.setFont(font)
-        self.horizontalLayout.addWidget(self.xvlie_label)
-        self.xvlie_LE = QtWidgets.QLineEdit(self.widget)
-        self.xvlie_LE.setObjectName("xvlie_LE")
-        self.xvlie_LE.setFont(font_le)
-        self.xvlie_LE.setMinimumSize(QtCore.QSize(0, 30))
-        self.horizontalLayout.addWidget(self.xvlie_LE)
-        self.xvlie_tbtn = QtWidgets.QToolButton(self.widget)
-        self.xvlie_tbtn.setObjectName("xvlie_tbtn")
-        self.xvlie_tbtn.setMaximumSize(QtCore.QSize(30, 28))
-        self.horizontalLayout.addWidget(self.xvlie_tbtn)
+        sizePolicy.setHeightForWidth(self.ori_LB.sizePolicy().hasHeightForWidth())
+        self.ori_LB.setSizePolicy(sizePolicy)
+        self.ori_LB.setMinimumSize(QtCore.QSize(100, 30))
+        # self.ori_LB.setMaximumSize(QtCore.QSize(10000, 10000))
+        self.ori_LB.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
+        self.ori_LB.setObjectName("ori_LB")
+        self.ori_LB.setFont(font)
+        self.horizontalLayout.addWidget(self.ori_LB)
+        self.ori_LE = QtWidgets.QLineEdit(self.widget)
+        self.ori_LE.setObjectName("ori_LE")
+        self.ori_LE.setFont(font_le)
+        self.ori_LE.setMinimumSize(QtCore.QSize(0, 30))
+        self.horizontalLayout.addWidget(self.ori_LE)
+        self.ori_TB = QtWidgets.QToolButton(self.widget)
+        self.ori_TB.setObjectName("ori_TB")
+        self.ori_TB.setMaximumSize(QtCore.QSize(30, 28))
+        self.horizontalLayout.addWidget(self.ori_TB)
         self.verticalLayout.addLayout(self.horizontalLayout)
-        # 结果路径
+
+        # 引物
         self.horizontalLayout_2 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_2.setObjectName("horizontalLayout_2")
-        self.result_label = QtWidgets.QLabel(self.widget)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Preferred)
+        self.yw_LB = QtWidgets.QLabel(self.widget)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.result_label.sizePolicy().hasHeightForWidth())
-        self.result_label.setSizePolicy(sizePolicy)
-        self.result_label.setMinimumSize(QtCore.QSize(100, 0))
-        self.result_label.setObjectName("result_label")
-        self.result_label.setFont(font)
-        self.horizontalLayout_2.addWidget(self.result_label)
+        sizePolicy.setHeightForWidth(self.yw_LB.sizePolicy().hasHeightForWidth())
+        self.yw_LB.setSizePolicy(sizePolicy)
+        self.yw_LB.setMinimumSize(QtCore.QSize(100, 30))
+        # self.yw_LB.setMaximumSize(QtCore.QSize(10000, 10000))
+        self.yw_LB.setLayoutDirection(QtCore.Qt.LeftToRight)
+        self.yw_LB.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
+        self.yw_LB.setObjectName("yw_LB")
+        self.yw_LB.setFont(font)
+        self.horizontalLayout_2.addWidget(self.yw_LB)
+        self.yw_CB = QtWidgets.QComboBox(self.widget)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.yw_CB.sizePolicy().hasHeightForWidth())
+        self.yw_CB.setSizePolicy(sizePolicy)
+        self.yw_CB.setMinimumSize(QtCore.QSize(0, 30))
+        self.yw_CB.setObjectName("yw_CB")
+        self.yw_CB.setFont(font_le)
+        self.yw_CB.addItems(self.yw_list)
+        self.horizontalLayout_2.addWidget(self.yw_CB)
+        self.verticalLayout.addLayout(self.horizontalLayout_2)
+
+        # 结果路径
+        self.horizontalLayout_3 = QtWidgets.QHBoxLayout()
+        self.horizontalLayout_3.setObjectName("horizontalLayout_3")
+        self.result_LB = QtWidgets.QLabel(self.widget)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.result_LB.sizePolicy().hasHeightForWidth())
+        self.result_LB.setSizePolicy(sizePolicy)
+        self.result_LB.setMinimumSize(QtCore.QSize(100, 30))
+        # self.result_LB.setMaximumSize(QtCore.QSize(10000, 10000))
+        self.result_LB.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
+        self.result_LB.setObjectName("result_LB")
+        self.result_LB.setFont(font)
+        self.horizontalLayout_3.addWidget(self.result_LB)
         self.result_LE = QtWidgets.QLineEdit(self.widget)
         self.result_LE.setObjectName("result_LE")
         self.result_LE.setFont(font_le)
         self.result_LE.setMinimumSize(QtCore.QSize(0, 30))
-        self.horizontalLayout_2.addWidget(self.result_LE)
-        self.result_tbtn = QtWidgets.QToolButton(self.widget)
-        self.result_tbtn.setObjectName("result_tbtn")
-        self.result_tbtn.setMaximumSize(QtCore.QSize(30, 28))
-        self.horizontalLayout_2.addWidget(self.result_tbtn)
-        self.verticalLayout.addLayout(self.horizontalLayout_2)
+        self.horizontalLayout_3.addWidget(self.result_LE)
+        self.result_TB = QtWidgets.QToolButton(self.widget)
+        self.result_TB.setObjectName("result_TB")
+        self.result_TB.setMaximumSize(QtCore.QSize(30, 28))
+        self.horizontalLayout_3.addWidget(self.result_TB)
+        self.verticalLayout.addLayout(self.horizontalLayout_3)
 
-        self.horizontalLayout_3 = QtWidgets.QHBoxLayout()
-        self.horizontalLayout_3.setObjectName("horizontalLayout_3")
+        self.horizontalLayout_4 = QtWidgets.QHBoxLayout()
+        self.horizontalLayout_4.setObjectName("horizontalLayout_4")
         self.run_btn = QtWidgets.QPushButton(self.widget)
         self.run_btn.setMaximumSize(QtCore.QSize(100, 40))
         self.run_btn.setObjectName("run_btn")
@@ -108,7 +156,7 @@ class Ui_Dialog(QWidget):
                                    "QPushButton:hover{                    \n"
                                    "    background:#99CC99;\n"
                                    "}\n")
-        self.horizontalLayout_3.addWidget(self.run_btn)
+        self.horizontalLayout_4.addWidget(self.run_btn)
         self.cancel_btn = QtWidgets.QPushButton(self.widget)
         self.cancel_btn.setMaximumSize(QtCore.QSize(100, 40))
         self.cancel_btn.setObjectName("cancel_btn")
@@ -120,14 +168,14 @@ class Ui_Dialog(QWidget):
                                       "QPushButton:hover{                    \n"
                                       "    background:#FF6666;\n"
                                       "}\n")
-        self.horizontalLayout_3.addWidget(self.cancel_btn)
-        self.verticalLayout.addLayout(self.horizontalLayout_3)
+        self.horizontalLayout_4.addWidget(self.cancel_btn)
+        self.verticalLayout.addLayout(self.horizontalLayout_4)
 
         self.retranslateUi(Dialog)
         QtCore.QMetaObject.connectSlotsByName(Dialog)
 
-        self.result_tbtn.clicked.connect(lambda: self.choose_path(self.result_LE))
-        self.xvlie_tbtn.clicked.connect(lambda: self.choose_path(self.xvlie_LE))
+        self.result_TB.clicked.connect(lambda: self.choose_path(self.result_LE))
+        self.ori_TB.clicked.connect(lambda: self.choose_path(self.ori_LE))
 
         self.run_btn.clicked.connect(self.receive_param)
         self.run_btn.clicked.connect(self.send_start_sig)
@@ -136,13 +184,13 @@ class Ui_Dialog(QWidget):
     def retranslateUi(self, Dialog):
         _translate = QtCore.QCoreApplication.translate
         Dialog.setWindowTitle(_translate("Dialog", "Dialog"))
-        self.xvlie_label.setText(_translate("Dialog", "起始路径："))
-        self.xvlie_tbtn.setText(_translate("Dialog", "..."))
-        self.result_label.setText(_translate("Dialog", "结果路径："))
-        self.result_tbtn.setText(_translate("Dialog", "..."))
+        self.ori_LB.setText(_translate("Dialog", "起始路径："))
+        self.ori_TB.setText(_translate("Dialog", "..."))
+        self.yw_LB.setText(_translate("Dialog", "引物："))
+        self.result_LB.setText(_translate("Dialog", "结果路径："))
+        self.result_TB.setText(_translate("Dialog", "..."))
         self.run_btn.setText(_translate("Dialog", "运行"))
         self.cancel_btn.setText(_translate("Dialog", "取消"))
-
 
     def choose_path(self, lineEdit):
         """
@@ -159,17 +207,19 @@ class Ui_Dialog(QWidget):
         接收子窗口中的所有参数，并发送给主窗口
         :return: 当前工作路径
         """
-        # 序列文件
-        xvlie_file = self.xvlie_LE.text()
+        # 起始文件
+        ori_path = self.ori_LE.text()
+        #引物
+        yw_data = self.yw_CB.currentText()
         # 结果路径
         result_path = self.result_LE.text()
 
-        if not xvlie_file or not result_path:
+        if not ori_path or not result_path:
             QMessageBox.warning(self, '警告', '参数不能为空！', QMessageBox.Ok)
         else:
             self.signal = 1
             # 根据起文件夹名称作为任务名称
-            result = re.findall(r'.*/(.*?)\..*', xvlie_file)
+            result = re.findall(r'.*/(.*?)\..*', ori_path)
             task_nm = result[0] if result else str(int(time.time()*1000))
             # 获取当前窗口标题进行任务区分
             task_type = self.Dialog.windowTitle()
@@ -180,7 +230,8 @@ class Ui_Dialog(QWidget):
                 'sample_list': '',
                 'barcode_list': '',
                 'result_path': result_path,
-                'xvlie_file': xvlie_file,
+                'ori_path': ori_path,
+                'yw_data': yw_data
             }
             # print(parmas)
             self.paramSignal.emit(parmas)
@@ -196,10 +247,13 @@ class Ui_Dialog(QWidget):
 
 
 if __name__ == '__main__':
+    con_model = config.get('SARS2_analyze', 'primer_list')
+    yw_list = con_model.split(',')
+
     app = QApplication(sys.argv)
     # 实例化主窗口
     main = QDialog()
-    main_ui = Ui_Dialog()
+    main_ui = Ui_Dialog(yw_list)
     main_ui.setupUi(main)
     # 显示
     main.show()
