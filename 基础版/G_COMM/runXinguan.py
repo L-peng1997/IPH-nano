@@ -7,6 +7,7 @@
 """
 import subprocess
 import os
+import sys
 from configparser import ConfigParser
 import threading
 import time
@@ -114,7 +115,7 @@ class RunCommand(QObject):
             self.cursor.execute(u_sql, (self.status, end_time, self.result, self.task_name, self.task_type))
             self.conn.commit()
             logger.error(f'{self.task_name} {self.status}：{e.stderr}')
-            quit()
+            sys.exit()
 
     def second_comm(self, file):
         """
@@ -152,7 +153,7 @@ class RunCommand(QObject):
             end_time = str(datetime.now()).split('.')[0]
             self.cursor.execute(u_sql, (self.status, end_time, self.result, self.task_name, self.task_type))
             self.conn.commit()
-            quit()
+            sys.exit()
 
     def third_comm(self, conn, cursor, thi_path, sample, bar):
         """
@@ -192,7 +193,7 @@ class RunCommand(QObject):
             end_time = str(datetime.now()).split('.')[0]
             cursor.execute(u_sql, (self.status, end_time, self.result, self.task_name, self.task_type))
             conn.commit()
-            quit()
+            sys.exit()
 
     def forth_comm(self, conn, cursor, sample, bar):
         """
@@ -232,7 +233,7 @@ class RunCommand(QObject):
             end_time = str(datetime.now()).split('.')[0]
             cursor.execute(u_sql, (self.status, end_time, self.result, self.task_name, self.task_type))
             conn.commit()
-            quit()
+            sys.exit()
 
     def get_tsv(self, conn, cursor, sample, bar):
         """
@@ -271,7 +272,7 @@ class RunCommand(QObject):
             end_time = str(datetime.now()).split('.')[0]
             cursor.execute(u_sql, (self.status, end_time, self.result, self.task_name, self.task_type))
             conn.commit()
-            quit()
+            sys.exit()
 
     def move_file(self, conn, cursor, sample, bar):
         """
@@ -313,7 +314,7 @@ class RunCommand(QObject):
             end_time = str(datetime.now()).split('.')[0]
             cursor.execute(u_sql, (self.status, end_time, self.result, self.task_name, self.task_type))
             conn.commit()
-            quit()
+            sys.exit()
 
     def thi_to_fifth(self, thi_path, sample, bar):
         """
@@ -387,7 +388,7 @@ class RunCommand(QObject):
             end_time = str(datetime.now()).split('.')[0]
             self.cursor.execute(u_sql, (self.status, end_time, self.result, self.task_name, self.task_type))
             self.conn.commit()
-            quit()
+            sys.exit()
 
     def finish(self):
         """

@@ -1,5 +1,6 @@
 import subprocess
 import os
+import sys
 import time
 import sqlite3
 import shutil
@@ -123,7 +124,7 @@ class RunPythonFile(QObject):
             self.cursor.execute(u_sql, (self.status, end_time, self.result, self.task_name, self.task_type))
             self.conn.commit()
             logger.error(f'{self.task_name} {self.status}：{e.stderr}')
-            quit()
+            sys.exit()
 
     def weizhi_xlfl(self):
         """
@@ -160,7 +161,7 @@ class RunPythonFile(QObject):
             self.cursor.execute(u_sql, (self.status, end_time, self.result, self.task_name, self.task_type))
             self.conn.commit()
             logger.error(f'{self.task_name} {self.status}：{e.stderr}')
-            quit()
+            sys.exit()
 
     def xinguan_suyuan(self):
         """
@@ -197,7 +198,7 @@ class RunPythonFile(QObject):
             self.cursor.execute(u_sql, (self.status, end_time, self.result, self.task_name, self.task_type))
             self.conn.commit()
             logger.error(f'{self.task_name} {self.status}：{e.stderr}')
-            quit()
+            sys.exit()
 
     def xinguan_xlpj(self):
         """
@@ -234,7 +235,7 @@ class RunPythonFile(QObject):
             self.cursor.execute(u_sql, (self.status, end_time, self.result, self.task_name, self.task_type))
             self.conn.commit()
             logger.error(f'{self.task_name} {self.status}：{e.stderr}')
-            quit()
+            sys.exit()
 
     def xinguan_xlfx(self):
         """
@@ -270,7 +271,7 @@ class RunPythonFile(QObject):
             self.cursor.execute(u_sql, (self.status, end_time, self.result, self.task_name, self.task_type))
             self.conn.commit()
             logger.error(f'{self.task_name} {self.status}：{e.stderr}')
-            quit()
+            sys.exit()
 
     def xinguan_wsfx(self):
         """
@@ -288,14 +289,14 @@ class RunPythonFile(QObject):
             self.conn.commit()
             self.exitSignal.emit(self.status)
 
-            # thi_res = subprocess.run(file_comm, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
-            #                          universal_newlines=True, shell=True)
-            # if thi_res.returncode == 0:
-            #     logger.info('执行成功')
-            #     logger.info(thi_res.stdout)
-            # else:
-            #     self.status = '执行失败！'
-            #     logger.error(f'执行出错：{thi_res.stdout}')
+            thi_res = subprocess.run(file_comm, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+                                     universal_newlines=True, shell=True)
+            if thi_res.returncode == 0:
+                logger.info('执行成功')
+                logger.info(thi_res.stdout)
+            else:
+                self.status = '执行失败！'
+                logger.error(f'执行出错：{thi_res.stdout}')
         except subprocess.CalledProcessError as e:
             self.status = '执行失败！'
             # self.result = self.status + '：' + str(e.stderr)
@@ -306,7 +307,7 @@ class RunPythonFile(QObject):
             self.cursor.execute(u_sql, (self.status, end_time, self.result, self.task_name, self.task_type))
             self.conn.commit()
             logger.error(f'{self.task_name} {self.status}：{e.stderr}')
-            quit()
+            sys.exit()
 
     def liugan(self):
         """
@@ -324,14 +325,14 @@ class RunPythonFile(QObject):
             self.conn.commit()
             self.exitSignal.emit(self.status)
 
-            # thi_res = subprocess.run(file_comm, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
-            #                          universal_newlines=True, shell=True)
-            # if thi_res.returncode == 0:
-            #     logger.info('执行成功')
-            #     logger.info(thi_res.stdout)
-            # else:
-            #     self.status = '执行失败！'
-            #     logger.error(f'执行出错：{thi_res.stdout}')
+            thi_res = subprocess.run(file_comm, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+                                     universal_newlines=True, shell=True)
+            if thi_res.returncode == 0:
+                logger.info('执行成功')
+                logger.info(thi_res.stdout)
+            else:
+                self.status = '执行失败！'
+                logger.error(f'执行出错：{thi_res.stdout}')
         except subprocess.CalledProcessError as e:
             self.status = '执行失败！'
             # self.result = self.status + '：' + str(e.stderr)
@@ -342,7 +343,7 @@ class RunPythonFile(QObject):
             self.cursor.execute(u_sql, (self.status, end_time, self.result, self.task_name, self.task_type))
             self.conn.commit()
             logger.error(f'{self.task_name} {self.status}：{e.stderr}')
-            quit()
+            sys.exit()
 
     def insert_db(self):
         # 运行前将任务参数存储到数据库中
@@ -360,7 +361,7 @@ class RunPythonFile(QObject):
             end_time = str(datetime.now()).split('.')[0]
             self.cursor.execute(u_sql, (self.status, end_time, self.result, self.task_name, self.task_type))
             self.conn.commit()
-            quit()
+            sys.exit()
 
     def finish(self):
         """

@@ -7,6 +7,7 @@
 import os
 import sqlite3
 import subprocess
+import sys
 from configparser import ConfigParser
 from datetime import datetime
 from PyQt5.QtCore import QObject, pyqtSignal
@@ -96,7 +97,7 @@ class RunErdaixlpj(QObject):
             end_time = str(datetime.now()).split('.')[0]
             self.cursor.execute(u_sql, (self.status, end_time, self.result, self.task_name, self.task_type))
             self.conn.commit()
-            quit()
+            sys.exit()
 
     def get_path(self):
         """
@@ -144,7 +145,7 @@ class RunErdaixlpj(QObject):
             self.cursor.execute(u_sql, (self.status, end_time, self.result, self.task_name, self.task_type))
             self.conn.commit()
             logger.error(f'{self.task_name} {self.status}：{e.stderr}')
-            quit()
+            sys.exit()
 
     def insert_db(self):
         # 运行前将任务参数存储到数据库中
@@ -162,7 +163,7 @@ class RunErdaixlpj(QObject):
             end_time = str(datetime.now()).split('.')[0]
             self.cursor.execute(u_sql, (self.status, end_time, self.result, self.task_name, self.task_type))
             self.conn.commit()
-            quit()
+            sys.exit()
 
     def finish(self):
         """

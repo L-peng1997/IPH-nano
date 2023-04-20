@@ -7,6 +7,7 @@
 """
 import subprocess
 import os
+import sys
 import time
 import sqlite3
 from PyQt5.QtCore import QObject, pyqtSignal
@@ -94,7 +95,7 @@ class RunPython(QObject):
             self.cursor.execute(u_sql, (self.status, end_time, self.result, self.task_name, self.task_type))
             self.conn.commit()
             logger.error(f'{self.task_name} {self.status}：{e.stderr}')
-            quit()
+            sys.exit()
 
     def merage_file(self):
         table2 = pd.read_csv(self.tsv_file, names=["comfirm", "readsid", "id", "length", "detail"], sep="\t")
@@ -146,7 +147,7 @@ class RunPython(QObject):
             self.cursor.execute(u_sql, (self.status, end_time, self.result, self.task_name, self.task_type))
             self.conn.commit()
             logger.error(f'{self.task_name} {self.status}：{e}')
-            quit()
+            sys.exit()
 
     def insert_db(self):
         # 运行前将任务参数存储到数据库中
@@ -164,7 +165,7 @@ class RunPython(QObject):
             end_time = str(datetime.now()).split('.')[0]
             self.cursor.execute(u_sql, (self.status, end_time, self.result, self.task_name, self.task_type))
             self.conn.commit()
-            quit()
+            sys.exit()
 
     def finish(self):
         """

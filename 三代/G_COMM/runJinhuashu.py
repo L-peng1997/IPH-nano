@@ -7,6 +7,7 @@ Nanopore新冠病毒-分子进化树
 """
 import subprocess
 import os
+import sys
 import time
 import sqlite3
 from PyQt5.QtCore import QObject, pyqtSignal
@@ -100,7 +101,7 @@ class RunJinhuashu(QObject):
             self.cursor.execute(u_sql, (self.status, end_time, self.result, self.task_name, self.task_type))
             self.conn.commit()
             logger.error(f'{self.task_name} {self.status}：{e.stderr}')
-            quit()
+            sys.exit()
 
     def insert_db(self):
         # 运行前将任务参数存储到数据库中
@@ -118,7 +119,7 @@ class RunJinhuashu(QObject):
             end_time = str(datetime.now()).split('.')[0]
             self.cursor.execute(u_sql, (self.status, end_time, self.result, self.task_name, self.task_type))
             self.conn.commit()
-            quit()
+            sys.exit()
 
     def finish(self):
         """

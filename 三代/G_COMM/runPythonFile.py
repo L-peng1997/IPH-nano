@@ -1,5 +1,6 @@
 import subprocess
 import os
+import sys
 import time
 import sqlite3
 import shutil
@@ -118,7 +119,7 @@ class RunPythonFile(QObject):
             self.cursor.execute(u_sql, (self.status, end_time, self.result, self.task_name, self.task_type))
             self.conn.commit()
             logger.error(f'{self.task_name} {self.status}：{e.stderr}')
-            quit()
+            sys.exit()
 
     def cexv_ctpj(self):
         """
@@ -153,7 +154,7 @@ class RunPythonFile(QObject):
             end_time = str(datetime.now()).split('.')[0]
             self.cursor.execute(u_sql, (self.status, end_time, self.result, self.task_name, self.task_type))
             self.conn.commit()
-            quit()
+            sys.exit()
         except Exception as e:
             self.status = '执行失败！'
             logger.error(f'{self.task_name} {self.status}：{e}')
@@ -163,7 +164,7 @@ class RunPythonFile(QObject):
             end_time = str(datetime.now()).split('.')[0]
             self.cursor.execute(u_sql, (self.status, end_time, self.result, self.task_name, self.task_type))
             self.conn.commit()
-            quit()
+            sys.exit()
 
     def weizhi_xlfl(self):
         """
@@ -199,7 +200,7 @@ class RunPythonFile(QObject):
             self.cursor.execute(u_sql, (self.status, end_time, self.result, self.task_name, self.task_type))
             self.conn.commit()
             logger.error(f'{self.task_name} {self.status}：{e.stderr}')
-            quit()
+            sys.exit()
     
     def xinguan_xlpj(self):
         """
@@ -237,7 +238,7 @@ class RunPythonFile(QObject):
             self.cursor.execute(u_sql, (self.status, end_time, self.result, self.task_name, self.task_type))
             self.conn.commit()
             logger.error(f'{self.task_name} {self.status}：{e.stderr}')
-            quit()
+            sys.exit()
 
     def xinguan_suyuan(self):
         """
@@ -275,7 +276,7 @@ class RunPythonFile(QObject):
             self.cursor.execute(u_sql, (self.status, end_time, self.result, self.task_name, self.task_type))
             self.conn.commit()
             logger.error(f'{self.task_name} {self.status}：{e.stderr}')
-            quit()
+            sys.exit()
 
     def insert_db(self):
         # 运行前将任务参数存储到数据库中
@@ -293,7 +294,7 @@ class RunPythonFile(QObject):
             end_time = str(datetime.now()).split('.')[0]
             self.cursor.execute(u_sql, (self.status, end_time, self.result, self.task_name, self.task_type))
             self.conn.commit()
-            quit()
+            sys.exit()
 
     def finish(self):
         """
