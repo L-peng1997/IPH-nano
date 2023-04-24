@@ -316,7 +316,7 @@ class RunPythonFile(QObject):
         :return:
         """
         try:
-            file_comm = f'python {exepath}/G_CONFIG/Flu_Virus/Flu_assemble.py -rawdata {self.xvlie_file} -result  {self.result_path}'
+            file_comm = f'python {exepath}/G_CONFIG/erdai/Flu_Virus/Flu_assemble.py -rawdata {self.xvlie_file} -result  {self.result_path}'
             logger.info(f'命令如下：{file_comm}')
             u_sql = 'update task set taskStatus=? where taskNm=? and taskType=?'
             # 将当前任务状态更新到数据库中，以便页面展示
